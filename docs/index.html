@@ -13,7 +13,7 @@
       name="viewport"
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
-    <link rel="icon" href="./arch.png" />
+    <link rel="icon" href="./bash.png" />
     <title>Arch Linux 教程</title>
     <link
       rel="stylesheet"
@@ -29,8 +29,8 @@
       }
       .app-name {
         padding-top: 10px;
-        background-color: rgb(51, 51, 51);
-        border-bottom: 4px solid rgb(0, 136, 204);
+        background-color: rgb(248, 182, 0);
+        border-bottom: 4px solid rgb(42, 50, 56);
       }
       .app-name-link img {
         width: 70%;
@@ -41,14 +41,14 @@
     <div id="app">加载中...</div>
     <script>
       window.$docsify = {
-        name: "Arch Linux教程",
+        name: "Linux Shell教程",
         loadSidebar: true,
         auto2top: true,
-        logo: "./arch.svg",
+        logo: "./bash.svg",
         topMargin: 90,
         notFoundPage: true,
         subMaxLevel: 4,
-        themeColor: "rgb(23,147,209)",
+        themeColor: "rgb(248,182,0)",
         repo: "https://github.com/KagarinoKirieStudio/ArchLinuxTutorial",
         formatUpdated: "{YYYY}-{MM}-{DD}",
         plugins: [
@@ -75,7 +75,7 @@
     <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/gitalk.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
-    <script>
+    <!-- <script>
       let props = {
         clientID: "23877dc148472e3995b0",
         clientSecret: "af8a78b74c7e0b4f7ef141920e10cbbd047dfa87",
@@ -92,7 +92,7 @@
       function onHashChange() {
         props.id = decodeURI(location.hash.split("?")[0]); //如果不切分，在docsify里面的各个段落都会生成新的评论issue
       }
-    </script>
+    </script> -->
     <script></script>
   </body>
 </html>
