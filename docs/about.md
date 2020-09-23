@@ -7,14 +7,6 @@ Github: [wallena3](https://github.com/wallena3)
 Bilibili: [科大\_吴亦凡](https://space.bilibili.com/77485509)  
 Youtube: [科大吴亦凡](https://www.youtube.com/channel/UCVO7lXKucA6z3O37WV7FG5w?view_as=subscriber)
 
-智力： 4/10
-体力： 2/10
-敏捷： 4/10
-耐力： 9/10
-力量： 3/10
-魅力： 5/10
-暴击： 7/10
-
 ## 致谢
 
 最近几年，群主经历了很多事情，基本都不是什么好事。所以有了那么一丁点微小的感悟。
