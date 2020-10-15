@@ -1,4 +1,4 @@
-# Linux 命令行与 Shell 简明实用教程
+# Linux 命令行与 Shell 编程实用教程
 
 可能是最实用，最简洁的 Linux 命令行与 Shell 中文教程。你可以通过本教程学会:
 
@@ -25,3 +25,6 @@ pacman -F info 就能找到了
 
 https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
 -->
+
+cd ls 等常见
+以及符号链接和硬链接 是重点和难点
