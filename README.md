@@ -6,25 +6,3 @@
 - Linux Shell 编程
 
 [阅读地址](https://kagarinokiriestudio.github.io/ShellTutorial/#/)
-
-<!-- 第二章简单说下仿真终端(纯tty)， xterm、 konsole、 gnome terminal 就行了 -->
-
-<!-- 第三章 重点讲man
-
- man 安装 man-db man-pages
- 要用-k查询   先执行 mandb建立索引
-
-texinfo 有info命令
-
-inetutils 有 hostname 命令
-
-查询某个命令在哪个包
-pacman -Fy 先更新文件列表数据库
-pacman -F info 就能找到了
-
-
-https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
--->
-
-cd ls 等常见
-以及符号链接和硬链接 是重点和难点
