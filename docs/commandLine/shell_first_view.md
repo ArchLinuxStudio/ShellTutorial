@@ -93,9 +93,23 @@ cd 命令可以直接使用，不加任何参数，此时会默认切换到当�
 
 此外，另一个常用的用法是`cd -`。此命令可以切换到你上次所处的文件系统路径位置下。在需要返回上次路径的时候，此命令非常高效实用。
 
-## 文件与目录的处理
+## 文件与目录的处理 TODO
 
 ## 文件的查看
+
+可用 file 命令查看文件的类型。
+
+```bash
+file 1.txt
+1.txt: ASCII text  #file命令不仅能确定文件中包含的文本信息，还能确定该文本文件的字符编码，ASCII
+```
+
+常见的文件类型还有 等等
+directory
+symbolic link to 'data_file'
+Bourne-Again shell script, ASCII text executable
+/bin/ls: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.24, #二进制可执行程序。file 命令能够确定该程序编译时所面向的平台以及需要何种类型的库。如果你有从未知源处获得的二进制文件，这会是个非常有用的特性
+JSON data
 
 <!--
 
