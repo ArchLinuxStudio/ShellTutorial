@@ -95,29 +95,49 @@ cd 命令可以直接使用，不加任何参数，此时会默认切换到当�
 
 ## 文件与目录的处理 TODO
 
+<!--
+以及符号链接和硬链接 是重点和难点
+-->
+
 ## 文件的查看
 
-可用 file 命令查看文件的类型。
+可用 file 命令确定文件的文件类型。
 
 ```bash
 file 1.txt
 1.txt: ASCII text  #file命令不仅能确定文件中包含的文本信息，还能确定该文本文件的字符编码，ASCII
 ```
 
-常见的文件类型还有 等等
-directory
-symbolic link to 'data_file'
-Bourne-Again shell script, ASCII text executable
-/bin/ls: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.24, #二进制可执行程序。file 命令能够确定该程序编译时所面向的平台以及需要何种类型的库。如果你有从未知源处获得的二进制文件，这会是个非常有用的特性
-JSON data
+常见的文件类型还有如下几种
 
-<!--
+- directory 目录
+- symbolic link to 'data_file' 符号链接
+- Bourne-Again shell script, ASCII text executable 脚本文件
+- /usr/bin/ls: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.24  
+  二进制可执行程序。file 命令能够确定该程序编译时所面向的平台以及需要何种类型的库。如果你有从未知源处获得的二进制文件，这会是个非常有用的特性
+- JSON data
 
-cd ls 等常见命令
-以及符号链接和硬链接 是重点和难点
+知道如何查看文件类型后，接下来学习如何查看文件内容。几个常见的命令是 cat, more 与 less。more 命令目前已经和 less 一样支持上下翻页，基本没有区别了。对于查看单个完整文件，群主更偏向直接使用 vim 查看。
 
--->
+有时存在一些巨型文件，如有些日志文件可以达到几十 GB 之大，这时候如果还整体查看文件，可能直接把 vim 等程序卡死了。此时需要的就是查看部分文件。常用的命令为 tail 和 head。
 
+更常见的场景是查看文件的末尾，如日志的末尾，查看最新产生的内容。默认情况是查看此文件最后十行的内容。
+
+```bash
+tail log_file
 ```
 
+可以向 tail 命令中加入-n 参数来修改所显示的行数。在下面的例子中，通过加入-n 2 使 tail 命令只显示文件的最后两行：
+
+```bash
+tail -n 2 log_file
+```
+
+-f 参数是 tail 命令的一个突出特性。它允许你在其他进程使用该文件时查看文件的内容。tail 命令会保持活动状态，并不断显示添加到文件中的内容。这是实时监测系统日志的绝妙方式。
+
+head 命令，顾名思义，会显示文件开头那些行的内容。默认情况下，它会显示文件前 10 行的文本。类似于 tail 命令，它也支持-n 参数，这样就可以指定想要显示的内容了。这两个命令都允许你在破折号后面直接输入想要显示的行数：
+
+```bash
+head log_file
+head -5 log_file
 ```
