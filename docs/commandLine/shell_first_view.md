@@ -173,11 +173,70 @@ ls -l --time=atime test_one
 
 ### 复制文件
 
-## 文件夹的处理
+### 自动补全
+
+如果你需要操作的文件/文件夹的名字很长，这正是制表键(Tab 健)自动补全挺身而出的时候。制表键自动补全允许你在输入文件名或目录名时按一下制表键，让 shell 帮忙将内容补充完整。
+
+```bash
+cp really_ridiculously_long_file_name  Mod_Scripts/
+```
+
+在上面的例子中，我们输入了命令 cp really，然后按制表键，shell 就将剩下的文件名自动补充完整了。
+
+使用制表键自动补全的的技巧在于要给 shell 足够的文件名信息，使其能够将需要文件同其他文件区分开。假如有另一个文件名也是以 really 开头，那么就算按了制表键，也无法完成文件名的自动补全。这时候你会听到嘟的一声。要是再连按一下制表键，shell 就会列出所有以 really 开头的文件名。这个特性可以让你观察究竟应该输入哪些内容才能完成自动补全。
+
+以上是对文件/文件夹的自动补全处理。如果希望对于 linux 命令也可以使用自动补全，在 Archlinux 上则需要额外安装包`bash-completion`。
+
+### 移动/重命名文件
+
+在 Linux 中，重命名文件称为移动（moving）。mv 命令可以将文件和目录移动到另一个位置或重新命名。
+
+```bash
+mv fall  fzll #重命名
+mv fzll  Pictures/   #把文件fzll从/home/christine移动到了/home/christine/Pirctures
+```
+
+注意，mv 将文件名从 fall 更改为 fzll，但 inode 编号和时间戳保持不变。这是因为 mv 只影响文件名。
+和 cp 命令类似，也可以在 mv 命令中使用-i 参数。这样在命令试图覆盖已有的文件时，你就会得到提示。
+
+也可以使用 mv 命令移动文件位置并修改文件名称，这些操作只需一步就能完成
+
+```bash
+mv /home/christine/Pictures/fzll  /home/christine/fall
+```
+
+也可以使用 mv 命令移动整个目录及其内容
+
+```bash
+mv Mod_Scripts  Old_Scripts
+```
+
+### 删除文件
+
+bash shell 中删除文件的命令是 rm。rm 命令的基本格式非常简单。
+
+```bash
+rm -i fall
+```
+
+注意，-i 命令参数提示你是不是要真的删除该文件。bash shell 中没有回收站或垃圾箱，文件一旦删除，就无法再找回。因此，在使用 rm 命令时，要养成总是加入-i 参数的好习惯。也可以使用通配符删除成组的文件。别忘了使用-i 选项保护好自己的文件。
+
+```bash
+$ rm -i f?ll
+rm: remove regular empty file 'fell'? y
+rm: remove regular empty file 'fill'? y
+rm: remove regular empty file 'full'? y
+```
+
+rm 命令的另外一个特性是，如果要删除很多文件且不受提示符的打扰，可以用-f 参数强制删除。小心为妙！
+
+### 链接文件
 
 <!--
 以及符号链接和硬链接 是重点和难点
 -->
+
+## 文件夹的处理 TODO
 
 ## 文件的查看
 
