@@ -192,7 +192,20 @@ cp -i /etc/NetworkManager/NetworkManager.conf .
 
 cp 命令的-R 参数威力强大。可以用它在一条命令中递归地复制整个目录的内容
 
-<!-- ls -d 不展开目录，只显示目录自身 一般用ls -dl 展示目录自身的详细信息 -->
+```bash
+ls -Fd *Scripts #-d选项只列出目录本身的信息，不列出其中的内容。一般可与l选项搭配显示目录自身详情
+cp -R Scripts/  Mod_Scripts
+```
+
+在执行 cp –R 命令之前，目录 Mod_Scripts 并不存在。它是随着 cp –R 命令被创建的，整个 Scripts 目录中的内容都被复制到其中。注意，在新的 Mod_Scripts 目录中，所有的文件都有对应的新日期。Mod_Scripts 目录现在已经成为了 Scripts 目录的完整副本。
+
+也可以在 cp 命令中使用通配符。
+
+```bash
+cp *script  Mod_Scripts/
+```
+
+该命令将所有以 script 结尾的文件复制到 Mod_Scripts 目录中。
 
 ### 自动补全
 
