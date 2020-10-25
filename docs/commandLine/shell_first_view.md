@@ -289,7 +289,8 @@ lrwxrwxrwx 1 christine christine    9 May 21 17:29 sl_data_file -> data_file
 
 ```bash
 ls -i *data_file
-296890 data_file  296891 sl_data_file
+296890 data_file
+296891 sl_data_file
 ```
 
 从这个例子中可以看出数据文件的 inode 编号是 296890，而 sl_data_file 的 inode 编号则是 296891。所以说它们是不同的文件。
@@ -299,7 +300,8 @@ ls -i *data_file
 ```bash
 ln code_file  hl_code_file
 ls -li *code_file
-296892 -rw-rw-r-- 2 christine christine 189 May 21 17:56  code_file 296892 -rw-rw-r-- 2 christine christine 189 May 21 17:56  hl_code_file
+296892 -rw-rw-r-- 2 christine christine 189 May 21 17:56  code_file
+296892 -rw-rw-r-- 2 christine christine 189 May 21 17:56  hl_code_file
 ```
 
 在上面的例子中，我们使用 ls -li 命令显示了\*code_files 的 inode 编号以及长列表。注意，带有硬链接的文件共享 inode 编号。这是因为它们终归是同一个文件。还要注意的是，链接计数（列表中第三项）显示这两个文件都有两个链接。另外，它们的文件大小也一模一样。
@@ -308,7 +310,42 @@ ls -li *code_file
 
 复制链接文件的时候一定要小心。如果使用 cp 命令复制一个文件，而该文件又已经被链接到了另一个源文件上，那么你得到的其实是源文件的一个副本。这很容易让人犯晕。用不着复制链接文件，可以创建原始文件的另一个链接。同一个文件拥有多个链接，这完全没有问题。但是，千万别创建符号链接文件的符号链接。这会形成混乱的链接链，不仅容易断裂，还会造成各种麻烦。
 
-## 文件夹的处理 TODO
+## 文件夹的处理
+
+在 Linux 中创建目录很简单，用 mkdir 命令即可：
+
+```bash
+mkdir New_Dir
+```
+
+要想同时创建父目录和其下的子目录，需要加入-p 参数：
+
+```bash
+mkdir -p New_Dir/Sub_Dir/Under_Dir
+```
+
+mkdir 命令的-p 参数可以根据需要创建缺失的父目录。父目录是包含目录树中下一级目录的目录。
+
+删除目录的基本命令是 rmdir。默认情况下，rmdir 命令只删除空目录。因为我们在 New_Dir 目录下创建了一个文件 my_file，所以 rmdir 命令拒绝删除目录。要解决这一问题，得先把目录中的文件删掉，然后才能在空目录上使用 rmdir 命令。rmdir 并没有-i 选项来询问是否要删除目录。这也是为什么说 rmdir 只能删除空目录还是有好处的原因。
+
+也可以在整个非空目录上使用 rm 命令。使用-r 选项使得命令可以向下进入目录，删除其中的文件，然后再删除目录本身。
+
+```bash
+rm -ri My_Dir #i用来确认是否删除每个文件/目录
+```
+
+(TODO 用 rm -r 删除的时候 在普通用户删除 root 文件时 即使不加 i 好像也会挨个确认我记得)
+
+对 rm 命令而言，-r 参数和-R 参数的效果是一样的。-R 参数同样可以递归地删除目录中的文件。shell 命令很少会就相同的功能采用不同大小写的参数。
+
+一口气删除目录及其所有内容的终极大法就是使用带有-r 参数和-f 参数的 rm 命令。rm -rf 命令既没有警告信息，也没有声音提示。这肯定是一个危险的工具，尤其是在拥有超级用户权限的时候。务必谨慎使用，请再三检查你所要进行的操作是否符合预期。
+
+```bash
+tree Small_Dir
+rm -rf Small_Dir
+```
+
+在上面的例子中，我们使用了 tree 工具。它能够以一种美观的方式展示目录、子目录及其中的文件。如果需要了解目录结构，尤其是在删除目录之前，这款工具正好能派上用场。不过它可能并没有默认安装在你所使用的 Linux 发行版中。
 
 ## 文件的查看
 
