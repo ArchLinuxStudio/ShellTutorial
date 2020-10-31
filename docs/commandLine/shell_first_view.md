@@ -54,6 +54,12 @@ man xterm
 tldr tar   #查看tar命令的简明使用方式
 ```
 
+若你出现如下错误，说明你的网络环境下，tldr 命令查询的 github raw 网址已经被 GFW 墙掉了。请使用全局代理或 proxychains 前缀。
+
+```bash
+Error fetching from tldr: <urlopen error [Errno 111] Connection refused>
+```
+
 ## 漫游文件系统
 
 当登录系统并获得 shell 命令提示符后，你通常位于自己的主目录中。一般情况下，你会想去逛逛主目录之外的其他地方。本节将告诉你如何使用 shell 命令来实现这个目标。

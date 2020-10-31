@@ -64,3 +64,19 @@ F  UID  PID PPID PRI  NI  VSZ  RSS WCHAN  STAT TTY      TIME COMMAND
 - STAT：代表当前进程状态的双字符状态码。
 
 许多系统管理员都喜欢 BSD 风格的 l 参数。它能输出更详细的进程状态码（STAT 列）。双字符状态码能比 Unix 风格输出的单字符状态码更清楚地表示进程的当前状态。
+
+## 系统信息相关 TODO
+
+dmidecode 命令 可以让你在 Linux 系统下获取有关硬件方面的信息。dmidecode 的作用是将 DMI 数据库中的信息解码，以可读的文本方式显示。由于 DMI 信息可以人为修改，因此里面的信息不一定是系统准确的信息。dmidecode 遵循 SMBIOS/DMI 标准，其输出的信息包括 BIOS、系统、主板、处理器、内存、缓存等等。
+
+DMI（Desktop Management Interface,DMI）就是帮助收集电脑系统信息的管理系统，DMI 信息的收集必须在严格遵照 SMBIOS 规范的前提下进行。SMBIOS（System Management BIOS）是主板或系统制造者以标准格式显示产品管理信息所需遵循的统一规范。SMBIOS 和 DMI 是由行业指导机构 Desktop Management Task Force(DMTF)起草的开放性的技术标准，其中 DMI 设计适用于任何的平台和操作系统。
+
+DMI 充当了管理工具和系统层之间接口的角色。它建立了标准的可管理系统更加方便了电脑厂商和用户对系统的了解。DMI 的主要组成部分是 Management Information Format(MIF)数据库。这个数据库包括了所有有关电脑系统和配件的信息。通过 DMI，用户可以获取序列号、电脑厂商、串口信息以及其它系统配件信息。
+
+查看电脑的序列号 在笔记本售后网站一般需要输入序列号查询，以下命令可以直接显示出。不用把笔记本翻过来到背面去记序列号再查询了。
+
+```bash
+dmidecode -s system-serial-number
+```
+
+同时，也可以很方便的查看 BIOS 版本 内存频率(也许是唯一查看内存频率的方法)等信息。
