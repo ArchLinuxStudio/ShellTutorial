@@ -148,6 +148,123 @@ killall http*
 上例中的命令结束了所有以 http 开头的进程，比如 Apache Web 服务器的 httpd 服务。
 以 root 用户身份登录系统时，使用 killall 命令要特别小心，因为很容易就会误用通配符而结束了重要的系统进程。这可能会破坏文件系统。
 
+## 磁盘相关
+
+在 Linux 系统上有几个命令行命令可以用来帮助管理存储媒体。本节将介绍在日常系统管理中经常用到的核心命令。
+
+Linux 文件系统将所有的磁盘都并入一个虚拟目录下。在使用新的存储媒体之前，需要把它放到虚拟目录下。这项工作称为挂载（mounting）。在今天的图形化桌面环境里，大多数 Linux 发行版都能自动挂载特定类型的可移动存储媒体。可移动存储媒体指的是可从 PC 上轻易移除的媒体，比如 CD-ROM、软盘和 U 盘。如果用的发行版不支持自动挂载和卸载可移动存储媒体，就必须手动完成。本节将介绍一些可以帮你管理可移动存储设备的 Linux 命令行命令。
+
+Linux 上用来挂载媒体的命令叫作 mount。默认情况下，mount 命令会输出当前系统上挂载的设备列表。
+
+```bash
+$ mount
+/dev/nvme0n1p1 on / type ext4 (rw,relatime)
+/dev/nvme0n1p2 on /home type ext4 (rw,relatime)
+/dev/nvme0n1p3 on /boot/EFI type vfat (rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro)
+/dev/sda1 on /run/media/wallen/My Ultra type fuseblk (rw,nosuid,nodev,relatime,user_id=0,group_id=0,default_permissions,allow_other,blksize=4096,uhelper=udisks2)
+```
+
+mount 命令提供如下四部分信息：
+
+- 媒体的设备文件名
+- 媒体挂载到虚拟目录的挂载点
+- 文件系统类型
+- 已挂载媒体的访问状态
+
+上面例子的最后一行输出中，移动硬盘被 KDE 桌面自动挂载到了挂载点/run/media 下。这个移动硬盘本身是 NTFS 格式，但是显示为 fuseblk。fuse 意为 file system in user space，在 archlinux 下，需要使用 ntfs-3g 来识别 NTFS 硬盘。ntfs-3g 并不是内核模块，而是调用 fuse 来挂载的，所以 df -ahT 以及 mount 的结果会认为是 fuseblk(blk=block)。
+
+要手动在虚拟目录中挂载设备，需要以 root 用户身份登录，或是以 root 用户身份运行 sudo 命令。下面是手动挂载媒体设备的基本命令：
+
+```bash
+mount -t type device directory
+```
+
+type 参数指定了磁盘被格式化的文件系统类型。Linux 可以识别非常多的文件系统类型。如果是和 Windows PC 共用这些存储设备，通常得使用下列文件系统类型。
+
+- vfat：Windows 长文件系统。缺点是单文件 4GB 的限制。
+- ntfs：Windows NT、XP、Vista、Win 7 以及 Win10 中广泛使用的高级文件系统。
+- iso9660：标准 CD-ROM 文件系统。
+- exFAT:vfat 升级版，突破了 4GB 的限制。
+
+大多数 U 盘和软盘会被格式化成 vfat/NTFS/exFAT 文件系统。而数据 CD 则必须使用 iso9660 文件系统类型。
+
+后面两个参数定义了该存储设备的设备文件的位置以及挂载点在虚拟目录中的位置。比如说，手动将 U 盘/dev/sdb1 挂载到/media/disk，可用下面的命令
+
+```bash
+mount -t vfat /dev/sdb1 /media/disk
+```
+
+媒体设备挂载到了虚拟目录后，root 用户就有了对该设备的所有访问权限，而其他用户的访问则会被限制。你可以通过目录权限（后文将介绍权限）指定用户对设备的访问权限。
+
+-o 参数允许在挂载文件系统时添加一些以逗号分隔的额外选项。以下为常用的选项。
+
+- ro：以只读形式挂载。
+- rw：以读写形式挂载。
+- user：允许普通用户挂载文件系统。
+- check=none：挂载文件系统时不进行完整性校验。
+- loop：挂载一个文件。
+
+---
+
+从 Linux 系统上移除一个可移动设备时，不能直接从系统上移除，而应该先卸载。Linux 上不能直接弹出已挂载的 CD。如果你在从光驱中移除 CD 时遇到麻烦，通常是因为该 CD 还挂载在虚拟目录里。先卸载它，然后再去尝试弹出。
+
+卸载设备的命令是 umount（是的，你没看错，命令名中并没有字母 n，这一点有时候很让人困惑）。umount 命令的格式非常简单
+
+```bash
+umount [directory | device ]
+```
+
+umount 命令支持通过设备文件或者是挂载点来指定要卸载的设备。如果有任何程序正在使用设备上的文件，系统就不会允许你卸载它：
+
+```bash
+[root@testbox mnt]# umount /home/rich/mnt
+umount: /home/rich/mnt: device is busy
+[root@testbox mnt]# cd /home/rich
+[root@testbox rich]# umount /home/rich/mnt
+[root@testbox rich]# ls -l mnt
+total 0
+[root@testbox rich]#
+```
+
+上例中，命令行提示符仍然在挂载设备的文件系统目录中，所以 umount 命令无法卸载该镜像文件。一旦命令提示符移出该镜像文件的文件系统，umount 命令就能卸载该镜像文件。
+
+如果在卸载设备时，系统提示设备繁忙，无法卸载设备，通常是有进程还在访问该设备或使用该设备上的文件。这时可用 lsof 命令获得使用它的进程信息，然后在应用中停止使用该设备或停止该进程。lsof 命令的用法很简单：lsof /path/to/device/node，或者 lsof /path/to/mount/point
+
+### df
+
+有时你需要知道在某个设备上还有多少磁盘空间。df 命令可以让你很方便地查看所有已挂载磁盘的使用情况
+
+```bash
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/sda2             18251068   7703964   9605024  45% /
+/dev/sda1               101086     18680     77187  20% /boot
+tmpfs                   119536         0    119536   0% /dev/shm
+/dev/sdb1               127462    113892     13570  90% /media/disk
+```
+
+df 命令会显示每个有数据的已挂载文件系统。如你在前例中看到的，有些已挂载设备仅限系统内部使用。可以注意到，默认大小均为 1024 字节为单位大小，不利于直观查看，可附加-h 参数进行更直观的查看。它会把输出中的磁盘空间按照用户易读的形式显示，通常用 M 来替代兆字节，用 G 替代吉字节。
+
+```bash
+$ df -h Filesystem            Size  Used Avail Use% Mounted on
+/dev/sdb2              18G  7.4G  9.2G  45% /
+/dev/sda1              99M   19M   76M  20% /boot tmpfs                 117M     0  117M   0% /dev/shm
+/dev/sdb1             125M  112M   14M  90% /media/disk
+$
+```
+
+### du
+
+通过 df 命令很容易发现哪个磁盘的存储空间快没了。系统管理员面临的下一个问题是，发生这种情况时要怎么办。另一个有用的命令是 du 命令。du 命令可以显示某个特定目录（默认情况下是当前目录）的磁盘使用情况。这一方法可用来快速判断系统上某个目录下是不是有超大文件。默认情况下，du 命令会显示当前目录下所有的文件、目录和子目录的磁盘使用情况，它会以磁盘块为单位来表明每个文件或目录占用了多大存储空间。对标准大小的目录来说，这个输出会是一个比较长的列表。
+
+每行输出左边的数值是每个文件或目录占用的磁盘块数。注意，这个列表是从目录层级的最底部开始，然后按文件、子目录、目录逐级向上。
+这么用 du 命令（不加参数，用默认参数）作用并不大。我们更想知道每个文件和目录占用了多大的磁盘空间，但如果还得逐页查找的话就没什么意义了。下面是能让 du 命令用起来更方便的几个命令行参数。
+
+- -c：同时查询多目录时，显示所有已列出文件总的大小。
+- -h：按用户易读的格式输出大小，即用 K 替代千字节，用 M 替代兆字节，用 G 替代吉字节。
+- -s：同时查询多目录时，依次显示每个输出参数(目录)的总大小。
+
+## 文件相关
+
 ## 系统信息相关
 
 dmidecode 命令 可以让你在 Linux 系统下获取有关硬件方面的信息。dmidecode 的作用是将 DMI 数据库中的信息解码，以可读的文本方式显示。由于 DMI 信息可以人为修改，因此里面的信息不一定是系统准确的信息。dmidecode 遵循 SMBIOS/DMI 标准，其输出的信息包括 BIOS、系统、主板、处理器、内存、缓存等等。
