@@ -247,7 +247,8 @@ df 命令会显示每个有数据的已挂载文件系统。如你在前例中�
 ```bash
 $ df -h Filesystem            Size  Used Avail Use% Mounted on
 /dev/sdb2              18G  7.4G  9.2G  45% /
-/dev/sda1              99M   19M   76M  20% /boot tmpfs                 117M     0  117M   0% /dev/shm
+/dev/sda1              99M   19M   76M  20% /boot
+tmpfs                 117M     0  117M   0% /dev/shm
 /dev/sdb1             125M  112M   14M  90% /media/disk
 $
 ```
@@ -263,7 +264,125 @@ $
 - -h：按用户易读的格式输出大小，即用 K 替代千字节，用 M 替代兆字节，用 G 替代吉字节。
 - -s：同时查询多目录时，依次显示每个输出参数(目录)的总大小。
 
-## 文件相关
+## 文件数据相关
+
+### 排序
+
+处理大量数据时的一个常用命令是 sort 命令。顾名思义，sort 命令是对数据进行排序的。默认情况下，sort 命令按照会话指定的默认语言的排序规则对文本文件中的数据行排序。
+
+对数字排序时，如果你本期望这些数字能按值排序，就要失望了。默认情况下，sort 命令会把数字当做字符来执行标准的字符排序，产生的输出可能根本就不是你要的。解决这个问题可用-n 参数，它会告诉 sort 命令把数字识别成数字而不是字符，并且按值排序。
+
+另一个常用的参数是-M，按月排序。Linux 的日志文件经常会在每行的起始位置有一个时间戳，用来表明事件是什么时候发生的。
+
+```bash
+Sep 13 07:10:09 testbox smartd[2718]: Device: /dev/sda, opened
+```
+
+如果将含有时间戳日期的文件按默认的排序方法来排序，并不会得到想要的结果。如果用-M 参数，sort 命令就能识别三字符的月份名，并相应地排序。
+
+-k 和-t 参数在对按字段分隔的数据进行排序时非常有用，例如/etc/passwd 文件。可以用-t 参数来指定字段分隔符，然后用-k 参数来指定排序的字段。举个例子，对密码文件/etc/passwd 根据用户 ID 进行数值排序，可以这么做：
+
+```bash
+sort -t ':' -k 3 -n /etc/passwd
+root:x:0:0::/root:/bin/bash
+bin:x:1:1::/:/usr/bin/nologin
+daemon:x:2:2::/:/usr/bin/nologin
+mail:x:8:12::/var/spool/mail:/usr/bin/nologin
+ftp:x:14:11::/srv/ftp:/usr/bin/nologin
+http:x:33:33::/srv/http:/usr/bin/nologin
+uuidd:x:68:68::/:/usr/bin/nologin
+```
+
+现在数据已经按第三个字段——用户 ID 的数值排序。
+
+-n 参数在排序数值时非常有用，比如 du 命令的输出。
+
+```bash
+du -sh * | sort -nr
+1008k   mrtg-2.9.29.tar.gz
+972k    bldg1 888k    fbs2.pdf
+760k    Printtest
+680k    rsync-2.6.6.tar.gz
+660k    code
+516k    fig1001.tiff
+496k    test
+496k    php-common-4.0.4pl1-6mdk.i586.rpm
+448k    MesaGLUT-6.5.1.tar.gz
+400k    plp
+```
+
+注意，-r 参数将结果按降序输出，这样就更容易看到目录下的哪些文件占用空间最多。本例中用到的管道命令（|）将 du 命令的输出重定向到 sort 命令。我们将在本书后面进一步讨论。
+
+### 搜索
+
+你会经常需要在大文件中找一行数据，而这行数据又埋藏在文件的中间。这时并不需要手动翻看整个文件，用 grep 命令来帮助查找就行了。grep 命令的命令行格式如下。
+
+```bash
+grep [options] pattern [file]
+```
+
+grep 命令会在输入或指定的文件中查找包含匹配指定模式的字符的行。grep 的输出就是包含了匹配模式的行。
+
+```bash
+$ grep three file1
+three
+$ grep t file1
+two
+three
+```
+
+第一个例子在文件 file1 中搜索能匹配模式 three 的文本。grep 命令输出了匹配了该模式的行。第二个例子在文件 file1 中搜索能匹配模式 t 的文本。这个例子里，file1 中有两行匹配了指定的模式，两行都输出了。由于 grep 命令非常流行，它经历了大量的更新。有很多功能被加进了 grep 命令。如果查看一下它的手册页面，你会发现它是多么的无所不能。
+
+如果要进行反向搜索（输出不匹配该模式的行），可加-v 参数。
+
+```bash
+$ grep -v t file1
+one
+four
+five
+```
+
+如果要显示匹配模式的行所在的行号，可加-n 参数
+
+```bash
+$ grep -n t file1
+2:two
+3:three
+```
+
+如果只要知道有多少行含有匹配的模式，可用-c 参数。
+
+```bash
+$ grep -c t file1
+2
+```
+
+如果要指定多个匹配模式，可用-e 参数来指定每个模式。这个例子输出了含有字符 t 或字符 f 的所有行。
+
+```bash
+$ grep -e t -e f file1
+two
+three
+four
+five
+```
+
+默认情况下，grep 命令用基本的 Unix 风格正则表达式来匹配模式。Unix 风格正则表达式采用特殊字符来定义怎样查找匹配的模式。
+以下是在 grep 搜索中使用正则表达式的简单例子。
+
+```bash
+$ grep [tf] file1
+two
+three
+four
+five
+```
+
+正则表达式中的方括号表明 grep 应该搜索包含 t 或者 f 字符的匹配。如果不用正则表达式，grep 就会搜索匹配字符串 tf 的文本。
+
+egrep 命令是 grep 的一个衍生，支持 POSIX 扩展正则表达式。POSIX 扩展正则表达式含有更多的可以用来指定匹配模式的字符（后文会讲）。fgrep 则是另外一个版本，支持将匹配模式指定为用换行符分隔的一列固定长度的字符串。这样就可以把这列字符串放到一个文件中，然后在 fgrep 命令中用其在一个大型文件中搜索字符串了。egrep 与 grep -E 相同。 fgrep 与 grep -F 相同。
+
+### 压缩与归档 TODO
 
 ## 系统信息相关
 
