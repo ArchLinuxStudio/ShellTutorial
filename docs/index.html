@@ -49,13 +49,13 @@
         notFoundPage: true,
         subMaxLevel: 4,
         themeColor: "rgb(248,182,0)",
-        repo: "https://github.com/KagarinoKirieStudio/ArchLinuxTutorial",
+        repo: "https://github.com/KagarinoKirieStudio/ShellTutorial",
         formatUpdated: "{YYYY}-{MM}-{DD}",
         plugins: [
           function (hook, vm) {
             hook.beforeEach(function (html) {
               var url =
-                "https://github.com/KagarinoKirieStudio/ArchLinuxTutorial/blob/master/docs/" +
+                "https://github.com/KagarinoKirieStudio/ShellTutorial/blob/master/docs/" +
                 vm.route.file;
               var editHtml = "[📝 编辑本文](" + url + ")\n";
 
