@@ -189,3 +189,122 @@ wallen    143776  142848  0 18:02 pts/1    00:00:00  \_ ps -f --forest
 ```
 
 ## 理解 shell 的内建命令
+
+在学习 GNU bash shell 期间，你可能听到过“内建命令”这个术语。搞明白 shell 的内建命令和非内建（外部）命令非常重要。内建命令和非内建命令的操作方式大不相同。
+
+外部命令，有时候也被称为文件系统命令，是存在于 bash shell 之外的程序。它们并不是 shell 程序的一部分。外部命令程序通常位于/bin、/usr/bin、/sbin 或/usr/sbin 中。
+
+ps 就是一个外部命令。你可以使用 which 和 type 命令找到它。
+
+```bash
+$ which ps
+/bin/ps
+$
+$ type -a ps
+ps is /bin/ps
+$
+$ ls -l /bin/ps
+-rwxr-xr-x 1 root root 93232 Jan  6 18:32 /bin/ps
+$
+```
+
+当外部命令执行时，会创建出一个子进程。这种操作被称为`衍生`（forking）。外部命令 ps 很方便显示出它的父进程以及自己所对应的衍生子进程。
+
+```bash
+$ ps -f
+UID        PID  PPID  C STIME TTY          TIME CMD christi+  2743  2742  0 17:09 pts/9    00:00:00 -bash
+christi+  2801  2743  0 17:16 pts/9    00:00:00 ps -f
+$
+```
+
+作为外部命令，ps 命令执行时会创建出一个子进程。在这里，ps 命令的 PID 是 2801，父 PID 是 2743。作为父进程的 bash shell 的 PID 是 2743。
+
+当进程必须执行衍生操作时，它需要花费时间和精力来设置新子进程的环境。所以说，外部命令多少还是有代价的。
+
+> 就算衍生出子进程或是创建了子 shell，你仍然可以通过发送信号与其沟通，这一点无论是在命令行还是在脚本编写中都是极其有用的。发送`信号`（signaling）使得进程间可以通过信号进行通信。信号及其发送会在后续章节中讲到。
+
+---
+
+`内建命令`和外部命令的区别在于前者不需要使用子进程来执行。它们已经和 shell 编译成了一体，作为 shell 工具的组成部分存在。不需要借助外部程序文件来运行
+
+cd 和 exit 命令都内建于 bash shell。可以利用 type 命令来了解某个命令是否是内建的。
+
+```bash
+$ type cd
+cd is a shell builtin
+$
+$ type exit
+exit is a shell builtin
+$
+```
+
+因为既不需要通过衍生出子进程来执行，也不需要打开程序文件，内建命令的执行速度要更快，效率也更高。本书末尾附录将给出 GNU bash shell 的内建命令列表。
+
+要注意，有些命令有多种实现。例如 echo 和 pwd 既有内建命令也有外部命令。两种实现略有不同。要查看命令的不同实现，使用 type 命令的-a 选项。
+
+```bash
+$ type -a echo
+echo is a shell builtin
+echo is /bin/echo
+$
+$ which echo
+/bin/echo
+$
+$ type -a pwd
+pwd is a shell builtin
+pwd is /bin/pwd
+$
+$ which pwd
+/bin/pwd
+$
+```
+
+命令 type -a 显示出了每个命令的两种实现。注意，which 命令只显示出了外部命令文件。
+
+> 对于有多种实现的命令，如果想要使用其外部命令实现，直接指明对应的文件就可以了。例如，要使用外部命令 pwd，可以输入/bin/pwd。
+
+一个有用的内建命令是 history 命令。bash shell 会跟踪你用过的命令。你可以唤回这些命令并重新使用。要查看最近用过的命令列表，可以输入不带选项的 history 命令。通常历史记录中会保存最近的 500/1000 条命令。这个数量可是不少的！你可以设置保存在 bash 历史记录中的命令数。要想实现这一点，你需要修改名为 HISTSIZE 的环境变量。
+
+你可以唤回并重用历史列表中最近的命令。这样能够节省时间和击键量。输入!!，然后按回车键就能够唤出刚刚用过的那条命令来使用。或者点击方向键中的向上键，也能使用刚刚用过的那条命令，连续点击还能向上翻阅执行历史命令。
+
+你可以唤回历史列表中任意一条命令。只需输入惊叹号和命令在历史列表中的编号即可。如执行`!20`
+
+命令历史记录被保存在隐藏文件.bash_history 中，它位于用户的主目录中。这里要注意的是，bash 命令的历史记录是先存放在内存中，当 shell 退出时才被写入到历史文件中。
+
+可以在退出 shell 会话之前强制将命令历史记录写入.bash_history 文件。要实现强制写入，需要使用 history 命令的-a 选项。
+
+> 如果你打开了多个终端会话，仍然可以使用 history -a 命令在打开的会话中向.bash_history 文件中添加记录。但是对于其他打开的终端会话，历史记录并不会自动更新。这是因为.bash_history 文件只有在打开首个终端会话时才会被读取。要想强制重新读取.bash_history 文件，更新终端会话的历史记录，可以使用 history -n 命令。
+
+使用 bash shell 命令历史记录能够大大地节省时间。利用内建的 history 命令能够做到的事情远不止这里所描述的。可以通过输入 man history 来查看 history 命令的 bash 手册页面。
+
+---
+
+alias 命令是另一个 shell 的内建命令。命令别名允许你为常用的命令（及其参数）创建另一个名称，从而将输入量减少到最低。你所使用的 Linux 发行版很有可能已经为你设置好了一些常用命令的别名。要查看当前可用的别名，使用 alias 命令以及选项-p。
+
+```bash
+$ alias -p
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias grep='grep --color=auto'
+alias l='ls -CF'
+alias la='ls -A'
+alias ll='ls -alF'
+alias ls='ls --color=auto' #表明终端支持彩色模式的列表
+```
+
+可以使用 alias 命令创建属于自己的别名。
+
+```bash
+alias li='ls -li'
+```
+
+在定义好别名之后，你随时都可以在 shell 中使用它，就算在 shell 脚本中也没问题。要注意，因为命令别名属于内部命令，一个别名仅在它所被定义的 shell 进程中才有效。
+
+```bash
+$ alias li='ls -li'
+$ bash
+$ li
+bash: li: command not found
+```
+
+不过好在有办法能够让别名在不同的子 shell 中都奏效。下一章中就会讲到具体的做法。shell、子 shell、进程和衍生进程都会受到环境变量的影响。下一章，我们会探究环境变量的影响方式以及如何在不同的上下文中使用环境变量。
