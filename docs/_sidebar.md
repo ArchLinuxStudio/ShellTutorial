@@ -4,6 +4,7 @@
 
   - [初识 Linux Shell](/commandLine/shell_first_view)
   - [更多实用命令](/commandLine/more_command)
+  - [理解 Shell](/commandLine/understand_shell)
 
 - 基础 Shell 编程
 
