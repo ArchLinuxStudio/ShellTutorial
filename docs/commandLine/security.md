@@ -288,4 +288,137 @@ chage 命令中有个好用的功能是设置账户的过期日期。有了它�
 
 ## 使用 Linux 组
 
-id wallen 　可以查看全部组信息等
+用户账户在控制单个用户安全性方面很好用，但涉及在共享资源的一组用户时就捉襟见肘了。为了解决这个问题，Linux 系统采用了另外一个安全概念——`组`（group）
+
+组权限允许多个用户对系统中的对象（比如文件、目录或设备等）共享一组共用的权限。（更多内容会在后文细述。）
+
+Linux 发行版在处理默认组的成员关系时略有差异。有些 Linux 发行版会创建一个组，把所有用户都当作这个组的成员。遇到这种情况要特别小心，因为一个用户的文件很有可能对其他用户也是可读的。有些发行版会为每个用户创建单独的一个组，这样可以更安全一些。例如，在 KDE 中创建用户， 就会为每个用户创建一个单独的与用户账户同名的组。在添加用户前后可用 grep 命令或 tail 命令查看/etc/group 文件的内容比较。
+
+每个组都有唯一的 GID——跟 UID 类似，在系统上这是个唯一的数值。除了 GID，每个组还有唯一的组名。Linux 系统上有一些组工具可以创建和管理你自己的组。本节将细述组信息是如何保存的，以及如何用组工具创建新组和修改已有的组。
+
+### /etc/group 文件
+
+与用户账户类似，组信息也保存在系统的一个文件中。/etc/group 文件包含系统上用到的每个组的信息。下面是一些来自 Linux 系统上/etc/group 文件中的典型例子。
+
+```bash
+root:x:0:root
+sys:x:3:bin
+mem:x:8:
+ftp:x:11:
+mail:x:12:
+log:x:19:
+smmsp:x:25:
+proc:x:26:polkitd
+games:x:50:
+lock:x:54:
+network:x:90:
+floppy:x:94:
+scanner:x:96:
+power:x:98:
+adm:x:999:daemon
+wheel:x:998:wallen,test,test2
+kmem:x:997:
+tty:x:5:
+utmp:x:996:
+audio:x:995:
+disk:x:994:
+input:x:993:
+kvm:x:992:
+lp:x:991:cups
+optical:x:990:
+render:x:989:
+storage:x:988:
+uucp:x:987:
+video:x:986:sddm
+users:x:985:
+systemd-journal:x:984:
+rfkill:x:983:
+bin:x:1:daemon
+daemon:x:2:bin
+http:x:33:
+nobody:x:65534:
+dbus:x:81:
+systemd-journal-remote:x:982:
+systemd-network:x:981:
+systemd-resolve:x:980:
+systemd-timesync:x:979:
+systemd-coredump:x:978:
+uuidd:x:68:
+avahi:x:973:
+colord:x:972:
+lightdm:x:971:
+polkitd:x:102:
+rtkit:x:133:
+usbmux:x:140:
+git:x:970:
+nvidia-persistenced:x:143:
+cups:x:209:
+dhcpcd:x:969:
+sddm:x:968:
+geoclue:x:967:
+gdm:x:120:
+deluge:x:966:
+redsocks:x:965:
+mysql:x:964:
+vboxusers:x:108:
+vboxsf:x:109:
+wallen:x:1000:
+```
+
+和 UID 一样，GID 在分配时也采用了特定的格式。系统账户用的组通常会分配低于 1000 的 GID 值，而用户组的 GID 则会从 1000 开始分配。/etc/group 文件有 4 个字段：
+
+- 组名
+- 组密码
+- GID
+- 属于该组的用户列表
+
+组密码允许非组内成员通过它临时成为该组成员。这个功能并不很普遍，但确实存在。
+
+千万不能通过直接修改/etc/group 文件来添加用户到一个组，要用 usermod 命令。在添加用户到不同的组之前，首先得创建组(创建用户时，默认生成的与用户名同名的组除外)。
+
+> 用户账户列表某种意义上有些误导人。你会发现，在列表中，有些组并没有列出用户。这并不是说这些组没有成员。当一个用户在/etc/passwd 文件中指定某个组作为默认组时，用户账户不会作为该组成员再出现在/etc/group 文件中。多年以来，被这个问题难倒的系统管理员可不是一两个呢。如果想要严谨的查看一个组所有的全部用户，可以先取/etc/passwd 下以该组为默认组的用户，再加上/etc/group 下该组的用户，合并这两部分，就能得到该组全部的用户列表了。除此之外，以用户的维度，可以使用`id`命令查看一个用户所属的组的情况。
+
+### 创建新组
+
+groupadd 命令可在系统上创建新组。
+
+```bash
+$ sudo groupadd shared
+```
+
+在创建新组时，默认没有用户被分配到该组。groupadd 命令没有提供将用户添加到组中的选项，但可以用 usermod 命令来弥补这一点。
+
+```bash
+$ sudo usermod -G shared test
+```
+
+usermod 命令的-G 选项会把这个新组添加到该用户账户的组列表里。
+
+> 如果更改了已登录系统账户所属的用户组，该用户必须登出系统后再登录，组关系的更改才能生效。
+
+> 为用户账户分配组时要格外小心。如果加了-g 选项，指定的组名会替换掉该账户的默认组。-G 选项则将该组添加到用户的属组的列表里，不会影响默认组。
+
+### 修改组
+
+在/etc/group 文件中可以看到，需要修改的组信息并不多。groupmod 命令可以修改已有组的 GID（加-g 选项）或组名（加-n 选项）。
+
+```bash
+$ groupmod -n sharing shared
+```
+
+原 shared 组被更名为 sharing。
+
+修改组名时，GID 和组成员不会变，只有组名改变。由于所有的安全权限都是基于 GID 的，你可以随意改变组名而不会影响文件的安全性。
+
+## 理解文件权限
+
+现在你已经了解了用户和组，是时候解读 ls 命令输出时所出现的谜一般的文件权限了。本节将会介绍如何对权限进行分析以及它们的来历。
+
+### 使用文件权限符
+
+使用 ls -l 可以查看到文件的权限情况
+
+```bash
+$ ls –l
+
+```
