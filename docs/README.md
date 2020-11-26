@@ -8,6 +8,6 @@
   - 文中`群主`即为`作者`，Linux 二次元交流群:[232995416](https://jq.qq.com/?_wv=1027&k=5hTGQRy)
   - 只要群主健在 就会一直更新 [鼓励志愿者提交更新](/contribution.md)
 
-学习本书的前置条件是你已经拥有一个安装好的 Linux 系统，实体机或者虚拟机的安装均可。建议使用 Ubuntu 或者 Arch Linux。即使命令行在各个 Linux 发行版上基本通用，但是本书还是会针对 Arch Linux 添加更多内容，建议有能力的同学尽量使用 Arch Linux。对于 Arch Linux，可阅读学习同系列教程：[Arch Linux 简明使用教程](https://kagarinokiriestudio.github.io/ArchLinuxTutorial/#/)。同时没有接触过 Linux 的同学，强烈建议先阅读学习[Linux 通识教程](/#/)<sup>Coming soon</sup>，学习一些基础概念再进行本书的学习。
+学习本书的前置条件是你已经拥有一个安装好的 Linux 系统，实体机或者虚拟机的安装均可。建议使用 Ubuntu 或者 Arch Linux。即使命令行在各个 Linux 发行版上基本通用，但是本书还是会针对 Arch Linux 添加更多内容，建议有能力的同学尽量使用 Arch Linux。对于 Arch Linux，可阅读学习同系列教程：[Arch Linux 简明使用教程](https://ArchLinuxStudio.github.io/ArchLinuxTutorial/#/)。同时没有接触过 Linux 的同学，强烈建议先阅读学习[Linux 通识教程](/#/)<sup>Coming soon</sup>，学习一些基础概念再进行本书的学习。
 
 对于命令行与 Shell 编程的学习，各个命令有大量的参数以及组合，没有必要死记硬背全部的参数和其作用，只需要记住常用的组合，以及在需要查询某一个用法的参数时，知道如何通过 man 等方式快速查询即可。同时，学习 Linux 命令行实践是非常重要的，不去实际敲一敲命令，始终无法有直观的体验，所以本书最好的学习方式是边看电子书，边敲命令行。
