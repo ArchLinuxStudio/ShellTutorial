@@ -6,6 +6,7 @@
   - [更多实用命令](/commandLine/more_command)
   - [理解 Shell](/commandLine/understand_shell)
   - [Linux 环境变量](/commandLine/linux_env)
+  - [理解 Linux 文件权限](/commandLine/security)
 
 - 基础 Shell 编程
 
