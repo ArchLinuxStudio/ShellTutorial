@@ -7,6 +7,7 @@
   - [理解 Shell](/commandLine/understand_shell)
   - [Linux 环境变量](/commandLine/linux_env)
   - [理解 Linux 文件权限](/commandLine/security)
+  - [管理文件系统](/commandLine/file_system)
 
 - 基础 Shell 编程
 
