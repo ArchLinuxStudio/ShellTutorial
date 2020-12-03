@@ -119,7 +119,7 @@ Linux 提供了一些不同的工具，我们可以利用它们轻松地在命�
 
 ### 创建分区
 
-一开始，你必须在存储设备上创建分区来容纳文件系统。分区可以是整个硬盘，也可以是部分硬盘，以容纳虚拟目录的一部分。
+一开始，你必须在存储设备上创建分区来容纳文件系统。分区可以是整个硬盘，也可以是部分硬盘，以容纳虚拟目录的一部分。此部分介绍一下广泛使用的 fdisk 工具，除此之外，cfdisk 也是一个命令行下非常好用的可视化分区。
 
 fdisk 工具用来帮助管理安装在系统上的任何存储设备上的分区。它是个交互式程序，允许你输入命令来逐步完成硬盘分区操作。
 
@@ -131,7 +131,7 @@ $ fdisk /dev/sdb
 Unable to open /dev/sdb
 ```
 
-> 有时候，创建新磁盘分区最麻烦的事情就是找出安装在 Linux 系统中的物理磁盘。Linux 采用了一种标准格式来为硬盘分配设备名称，但是你得熟悉这种格式。对于老式的 IDE 驱动器，Linux 使用的是/dev/hdx。其中 x 表示一个字母，具体是什么要根据驱动器的检测顺序（第一个驱动器是 a，第二个驱动器是 b，以此类推）。对于较新的 SATA 驱动器和 SCSI 驱动器，Linux 使用/dev/sdx。其中的 x 具体是什么也要根据驱动器的检测顺序（和之前一样，第一个驱动器是 a，第二个驱动器是 b，以此类推）。更新的 SSD 固态硬盘一般以/dev/nvme0nx 来标识。在格式化分区之前，最好再检查一下是否正确指定了驱动器。
+> 有时候，创建新磁盘分区最麻烦的事情就是找出安装在 Linux 系统中的物理磁盘。Linux 采用了一种标准格式来为硬盘分配设备名称，但是你得熟悉这种格式。对于老式的 IDE 驱动器，Linux 使用的是/dev/hdx。其中 x 表示一个字母，具体是什么要根据驱动器的检测顺序（第一个驱动器是 a，第二个驱动器是 b，以此类推）。对于较新的 SATA 驱动器和 SCSI 驱动器，Linux 使用/dev/sdx。其中的 x 具体是什么也要根据驱动器的检测顺序（和之前一样，第一个驱动器是 a，第二个驱动器是 b，以此类推）。更新式的 SSD 固态硬盘一般以/dev/nvme0nx 来标识。在格式化分区之前，最好再检查一下是否正确指定了驱动器。
 
 如果你拥有超级用户权限并指定了正确的驱动器，那就可以进入 fdisk 工具的操作界面了。
 
@@ -147,3 +147,70 @@ Command (m for help):
 ```
 
 > 如果这是你第一次给该存储设备分区，fdisk 会警告你设备上没有分区表。
+
+fdisk 交互式命令提示符使用单字母命令来告诉 fdisk 做什么。基本只需要记住常用的命令即可。
+
+对于初学者，可以用 p 命令将一个存储设备的详细信息显示出来。
+
+```bash
+Command (m for help): p
+Disk /dev/sdb: 5368 MB, 5368709120 bytes
+255 heads, 63 sectors/track, 652 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk identifier: 0x11747e88
+Device Boot      Start         End      Blocks   Id  System
+Command (m for help):
+```
+
+输出显示这个存储设备有 5368 MB（5 GB）的空间。存储设备明细后的列表说明这个设备上是否已有分区。这个例子中的输出中没有显示任何分区，所以设备还未分区。
+
+下一步，可以使用 n 命令在该存储设备上创建新的分区。
+
+```bash
+Command (m for help): n
+Command action
+e   extended
+p   primary partition (1-4)
+p
+Partition number (1-4): 1
+First cylinder (1-652, default 1): 1
+Last cylinder, +cylinders or +size{K,M,G} (1-652, default 652): +2G
+Command (m for help):
+```
+
+分区可以按`主分区`（primary partition）或`扩展分区`（extended partition）创建。主分区可以被文件系统直接格式化，而扩展分区则只能容纳其他逻辑分区。扩展分区出现的原因是每个存储设备上只能有 4 个分区。可以通过创建一个扩展分区，然后在扩展分区内创建逻辑分区进行扩展。上例中创建了一个主分区，在存储设备上给它分配了分区号 1，然后给它分配了 2 GB 的存储设备空间。你可以再次使用 p 命令查看结果
+
+```bash
+Command (m for help): p
+Disk /dev/sdb: 5368 MB, 5368709120 bytes
+255 heads, 63 sectors/track, 652 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk identifier: 0x029aa6af
+
+Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1               1         262     2104483+  83  Linux
+Command (m for help):
+```
+
+从输出中现在可以看到，该存储设备上有了一个分区（叫作/dev/sdb1）。Id 列定义了 Linux 怎么对待该分区。fdisk 允许创建多种分区类型。使用 l 命令列出可用的不同类型。默认类型是 83，该类型定义了一个 Linux 文件系统。如果你想为其他文件系统创建一个分区（比如 Windows 的 NTFS 分区），只要选择一个不同的分区类型即可。
+
+可以重复上面的过程，将存储设备上剩下的空间分配给另一个 Linux 分区。创建了想要的分区之后，用 w 命令将更改保存到存储设备上。
+
+```bash
+Command (m for help): w
+The partition table has been altered!
+Calling ioctl() to re-read partition table.
+Syncing disks.
+```
+
+存储设备的分区信息被写入分区表中，Linux 系统通过 ioctl()调用来获知新分区的出现。设置好分区之后，可以使用 Linux 文件系统对其进行格式化。
+
+> 有些发行版和较旧的发行版在生成新分区之后并不会自动提醒 Linux 系统。如果是这样的话，你要么使用 partprob 或 hdparm 命令（参考相应的手册页），要么重启系统，让系统读取更新过的分区表。
+
+### 创建文件系统
+
+在将数据存储到分区之前，你必须用某种文件系统对其进行格式化，这样 Linux 才能使用它。每种文件系统类型都用自己的命令行程序来格式化分区。表 8-3 列出了本章中讨论的不同文件系统所对应的工具。
