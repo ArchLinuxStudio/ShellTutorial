@@ -1,9 +1,6 @@
 # 关于&致谢 <!-- {docsify-ignore-all} -->
 
 关于本书存在的任何问题以及建议，均可以给群主发送邮件，也可以直接在本页下方留言。  
-Linux 二次元交流 QQ 群: [232995416](https://jq.qq.com/?_wv=1027&k=5hTGQRy)  
-邮箱: wallena3@gmail.com  
-Github: [wallena3](https://github.com/wallena3)  
 Bilibili: [科大\_吴亦凡](https://space.bilibili.com/77485509)  
 Youtube: [科大吴亦凡](https://www.youtube.com/channel/UCVO7lXKucA6z3O37WV7FG5w?view_as=subscriber)
 

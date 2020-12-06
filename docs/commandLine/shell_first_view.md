@@ -8,25 +8,28 @@
 
 ## 起步
 
-在启动图形化终端后，你首先会看到一个待输入的命令提示符，类似 windows 系统中的 cmd。一般如下所示,显示了当前用户 ID 名 wallen，系统名为 archlinux。`~`这个波浪线代表你正处于 wallen 这个用户的个人目录下，路径为`/home/wallen`。
+在启动图形化终端后，你首先会看到一个待输入的命令提示符，类似 windows 系统中的 cmd。一般如下所示,显示了当前用户 ID 名 wallen，系统名为 archlinux。`~`这个波浪线代表你正处于 wallen 这个用户的个人目录下，路径为`/home/wallen`。`$`代表当前是已一个普通用户登陆，若为`#`则表示是以 root 帐户登陆。
 
 ```bash
 wallen@archlinux:~$
 ```
 
-你可能听说过 Linux 中有非常多的命令，都记住各个命令的用法是不现实的，所以第一步我们来学习的命令就是 man 命令：一个用来查询各个命令如何使用命令。  
-在 ArchLinux 上，你首先需要安装`man-db man-pages`两个包，如果是第一次安装，最好重启一下，以便 man-db.service 建立-k 搜索参数需要使用的 db 索引。
+你可能听说过 Linux 中有非常多的命令，都记住各个命令的用法是不现实的，所以第一步我们来学习的命令就是 man 命令：一个用来查询各个命令如何使用命令。
+
+在 ArchLinux 上，你首先需要安装`man-db man-pages`两个包，如果是第一次安装，最好执行一下如下命令，以便 man-db.service 建立-k 搜索参数需要使用的 db 索引。
+
+```bash
+$ sudo systemctl enable --now man-db #第一次执行时间会较长，可能会有几分钟 耐心等待
+```
 
 比如，现在想查询 xterm 命令的使用方式，那么输入执行如下命令即可
 
 ```bash
-man xterm
+$ man xterm
 ```
 
 执行后你可以看到标题，描述，以及一大堆的信息。首先要知道，man 命令是用来速查某种命令使用方式的，不是用来各个详细阅读的(当然你有时间愿意读也没问题)。
 在这个界面你可以执行一些搜索操作，方式和在 vim 中类似，比如输入`/`斜杠加上你想搜索的单词进行搜索，`n`键跳到下一个匹配的位置等等。一般常规的查询一个命令的流程就是先看一下 Description 知道这个命令是干什么的，然后输入斜杠搜索一下你想查询的参数的含义，最后看完按`q`键退出。
-
-如果不记得命令名怎么办？可以使用关键字搜索手册页。语法是：man -k 关键字。例如，要查找与终端相关的命令，可以输入 man -k terminal。
 
 在 man 页面的左上角，可以看到`XTERM(1)`的字样。这个`(1)`代表的是手册类型，下面列举一下各个数字所代表的类型意义。
 
@@ -40,7 +43,7 @@ man xterm
 - 8:超级用户和系统管理员命令
 - 9:内核例程
 
-上面有的部分现在看不懂也没关系，该懂的时候你自然就懂了。~~虽然大多数人基本永远也用不着懂~~
+上面有的部分现在看不懂也没关系，该懂的时候你自然就懂了。
 
 一个命令偶尔会在多个内容区域都有对应的手册页。比如说，有个叫作 hostname(在 archlinux 中需要安装包`inetutils`) 的命令。手册页中既包括该命令的相关信息，也包括对系统主机名的概述。要想查看所需要的页面，可以输入 man section# topic。对手册页中的第 1 部分而言，就是输入 man 1 hostname。对于手册页中的第 7 部分，就是输入 man 7 hostname。
 
@@ -48,10 +51,12 @@ man xterm
 
 另外，大多数命令都可以接受-help 或--help 选项。例如你可以输入 hostname -help 来查看帮助。
 
+如果不记得命令名怎么办？可以使用关键字搜索手册页。语法是：man -k 关键字。例如，要查找与终端相关的命令，可以输入 man -k terminal。
+
 除了万能的 man 命令，近几年还出现了一个非常流行的命令行帮助项目:tldr。其含义为太长不看的缩写。像它的名字一样，这个命令只输出某个命令的最简要的使用方式，对喜欢太长不看的人来说非常好用。在 archlinux 上可以直接通过 pacman -S tldr 进行安装。
 
 ```bash
-tldr tar   #查看tar命令的简明使用方式
+$ tldr tar   #查看tar命令的简明使用方式
 ```
 
 若你出现如下错误，说明你的网络环境下，tldr 命令查询的 github raw 网址已经被 GFW 墙掉了。请使用全局代理或 proxychains 前缀。
@@ -73,7 +78,7 @@ Error fetching from tldr: <urlopen error [Errno 111] Connection refused>
 这种完整的路径被称为`绝对路径`，即从根路径`/`到目标文件的完整路径结构,含义为 wallen 这个用户家路径下的 Documents 目录下，有一个名为 test.cpp 的文件。想查看当前所处的位置的绝对路径，可以使用命令`pwd`
 
 ```bash
-pwd
+$ pwd
 /home/wallen/Documents/
 ```
 
@@ -89,16 +94,16 @@ pwd
 
 ```bash
 #绝对路径的例子
-cd /home/wallen/Documents/  #使用绝对路径的方式切换到/home/wallen/Documents/路径下
+$ cd /home/wallen/Documents/  #使用绝对路径的方式切换到/home/wallen/Documents/路径下
 #相对路径的例子
-cd ../Desktop               #使用绝对路径的方式切换到/home/wallen/Desktop/路径下
+$ cd ../Desktop               #从/home/wallen/Documents/目录，使用相对路径的方式切换到/home/wallen/Desktop/路径下
 ```
 
 一般来说，要视情况来使用相对路径或者绝对路径。在上述例子中，使用相对路径可以少输入很多内容。若此时想要切换到/etc 路径下，则明显使用绝对路径较为方便
 
 ```bash
-cd /etc         #如果使用绝对路径
-cd ../../../etc #如果使用相对路径
+$ cd /etc         #如果使用绝对路径
+$ cd ../../../etc #如果使用相对路径
 ```
 
 cd 命令可以直接使用，不加任何参数，此时会默认切换到当前用户的家目录下，如`/home/wallen`。在终端中，如果你能看到提示符最后有一个`~`波浪线，它代表的就是当前的路径是当前用户的家目录。
@@ -111,16 +116,32 @@ cd 命令可以直接使用，不加任何参数，此时会默认切换到当�
 
 ls 命令最基本的形式会显示当前目录下的文件和目录：
 
-注意，ls 命令输出的列表是按字母排序的（按列排序而不是按行排序）。可用带-F 参数的 ls 命令轻松区分文件和目录。使用-F 参数可以得到如下输出。F 参数在目录名后加了正斜线（/），以方便用户在输出中分辨它们。类似地，它会在可执行文件（比如上面的 my_script 文件）的后面加个星号，以便用户找出可在系统上运行的文件。
+注意，ls 命令输出的列表是按字母排序的（按列排序而不是按行排序）。可用带-F 参数的 ls 命令轻松区分文件和目录。使用-F 参数可以得到如下输出。
 
-Linux 经常采用隐藏文件来保存配置信息。在 Linux 上，隐藏文件通常是文件名以点号开始的文件。这些文件并没有在默认的 ls 命令输出中显示出来，因此我们称其为隐藏文件。要把隐藏文件和普通文件及目录一起显示出来，就得用到-a 参数。下面是一个带有-a 参数的 ls 命令的例子。所有以点号开头的隐藏文件现在都显示出来了。
+```bash
+$ ls -F
+'2020-11-20 00-10-20.flv'   test
+222                        testdir/
+bugreport/                 ThunderNetwork/
+Desktop/                   Unigine_Heaven_Benchmark_4.0_20201205_1745.html
+Documents/                 Videos/
+Downloads/                'VirtualBox VMs'/
+Games/                     xiaohuli/
+Music/                     my_script.sh*
+'Nutstore Files'/           迅雷下载/
+Pictures/
+```
 
--R 参数是 ls 命令可用的另一个参数，叫作递归选项。它列出了当前目录下包含的子目录中的文件。如果目录很多，这个输出就会很长。以下是-R 参数输出的简单例子。注意，首先-R 参数显示了当前目录下的内容，也就是之前例子中用户 home 目录下的那些文件。另外，它还显示出了用户 home 目录下所有子目录及其内容。只有 Music 子目录中包含了一个可执行文件 ILoveLinux.mp3。选项并一定要像例子中那样分开输入：ls –F –R。它们可以进行如下合并：ls –FR。在上一个例子中，子目录中没再包含子目录。如果有更多的子目录，-R 参数会继续进行遍历。正如你所看到的，如果目录结构很庞大，输出内容会变得很长。
+F 参数在目录名后加了正斜线（/），以方便用户在输出中分辨它们。类似地，它会在可执行文件（比如上面的 my_script 文件）的后面加个星号，以便用户找出可在系统上运行的文件。
+
+Linux 经常采用隐藏文件来保存配置信息。在 Linux 上，隐藏文件通常是文件名以点号开始的文件。这些文件并没有在默认的 ls 命令输出中显示出来，因此我们称其为隐藏文件。要把隐藏文件和普通文件及目录一起显示出来，就得用到-a 参数。，使用`ls -a`，所有以点号开头的隐藏文件现在都显示出来了。
+
+-R 参数是 ls 命令可用的另一个参数，叫作递归选项。它列出了当前目录下包含的子目录中的文件。如果目录很多，这个输出就会很长。注意，首先-R 参数显示了当前目录下的内容，也就是之前例子中用户 home 目录下的那些文件。另外，它还显示出了用户 home 目录下所有子目录及其内容。选项并不一定要分开输入：ls –F –R。它们可以进行如下合并：ls –FR。在上一个例子中，子目录中没再包含子目录。如果有更多的子目录，-R 参数会继续进行遍历。正如你所看到的，如果目录结构很庞大，输出内容会变得很长。
 
 在基本的输出列表中，ls 命令并未输出太多每个文件的相关信息。要显示附加信息，另一个常用的参数是-l。-l 参数会产生长列表格式的输出，包含了目录中每个文件的更多相关信息。这种长列表格式的输出在每一行中列出了单个文件或目录。除了文件名，输出中还有其他有用信息。输出的第一行显示了在目录中包含的总块数。在此之后，每一行都包含了关于文件（或目录）的下述信息：
 
-- 文件类型，比如目录（d）、文件（-）、字符型文件（c）或块设备（b
-- 文件的权限（参见第 6 章）
+- 文件类型，比如目录（d）、文件（-）、字符型文件（c）或块设备（b）
+- 文件的权限
 - 文件的硬链接总数；
 - 文件属主的用户名；
 - 文件属组的组名；
@@ -135,10 +156,10 @@ Linux 经常采用隐藏文件来保存配置信息。在 Linux 上，隐藏文�
 - 问号（?）代表一个字符；
 - 星号（\*）代表零个或多个字符。
 
-在过滤器中使用星号和问号被称为文件扩展匹配（file globbing），指的是使用通配符进行模式匹配的过程。通配符正式的名称叫作元字符通配符（metacharacter wildcards）。除了星号和问号之外，还有更多的元字符通配符可用于文件扩展匹配。可以使用中括号。
+在过滤器中使用星号和问号被称为`文件扩展匹配`（file globbing），指的是使用通配符进行模式匹配的过程。通配符正式的名称叫作元`字符通配符`（metacharacter wildcards）。除了星号和问号之外，还有更多的元字符通配符可用于文件扩展匹配。可以使用中括号。
 
 ```bash
-ls -l my_scr[ai]pt
+$ ls -l my_scr[ai]pt
 -rw-rw-r-- 1 christine christine  0 May 21 13:25 my_scrapt
 -rwxrw-r-- 1 christine christine 54 May 21 11:26 my_script
 ```
@@ -146,7 +167,7 @@ ls -l my_scr[ai]pt
 在这个例子中，我们使用了中括号以及在特定位置上可能出现的两种字符：a 或 i。中括号表示一个字符位置并给出多个可能的选择。可以像上面的例子那样将待选的字符列出来，也可以指定字符范围，例如字母范围[a – i]。
 
 ```bash
-ls -l f[a-i]ll
+$ ls -l f[a-i]ll
 -rw-rw-r-- 1 christine christine 0 May 21 13:44 fall
 -rw-rw-r-- 1 christine christine 0 May 21 13:44 fell
 -rw-rw-r-- 1 christine christine 0 May 21 13:44 fill
@@ -155,13 +176,13 @@ ls -l f[a-i]ll
 另外，可以使用感叹号（!）将不需要的内容排除在外。
 
 ```bash
-ls -l f[!a]ll
+$ ls -l f[!a]ll
 -rw-rw-r-- 1 christine christine 0 May 21 13:44 fell
 -rw-rw-r-- 1 christine christine 0 May 21 13:44 fill
 -rw-rw-r-- 1 christine christine 0 May 21 13:44 full
 ```
 
-在进行文件搜索时，文件扩展匹配是一个功能强大的特性。它也可以用于 ls 以外的其他 shell 命令。本章随后的部分会有到更多相关的例子。
+在进行文件搜索时，文件扩展匹配是一个功能强大的特性。它也可以用于 ls 以外的其他 shell 命令。随后的部分会有到更多相关的例子。
 
 ## 文件的处理
 
@@ -171,7 +192,7 @@ touch 命令用于创建空白文件。如果作用于一个已有文件，可�
 如果只想改变访问时间，可用-a 参数
 
 ```bash
-touch -a test_one
+$ touch -a test_one
 ls -l --time=atime test_one
 ```
 
@@ -179,28 +200,39 @@ ls -l --time=atime test_one
 
 ### 复制文件
 
-cp source destination  
+复制文件的格式为
+
+```bash
+$ cp source destination
+```
+
 当 source 和 destination 参数都是文件名时，cp 命令将源文件复制成一个新文件，并且以 destination 命名。新文件就像全新的文件一样，有新的修改时间。
 
 如果目标文件已经存在，cp 命令可能并不会提醒这一点。最好是加上-i 选项，强制 shell 询问是否需要覆盖已有文件。
 
 也可以将文件复制到现有目录中。
-cp -i test_one /home/christine/Documents/
+
+```bash
+$ cp -i test_one /home/christine/Documents/
+```
+
 新文件现就在目录 Documents 中了，和源文件同名。
 
-之前的例子在目标目录名尾部加上了一个正斜线（/），这表明 Documents 是目录而非文件。这有助于明确目的，而且在复制单个文件时非常重要。如果没有使用正斜线，子目录/home/christine/Documents 又不存在，就会有麻烦。在这种情况下，试图将一个文件复制到 Documents 子目录反而会创建一个名为 Documents 的文件，连错误消息都不会显示！
+上面的例子在目标目录名尾部加上了一个正斜线（/），这表明 Documents 是目录而非文件。这有助于明确目的，而且在复制单个文件时非常重要。如果没有使用正斜线，子目录/home/christine/Documents 又不存在，就会有麻烦。在这种情况下，试图将一个文件复制到 Documents 子目录反而会创建一个名为 Documents 的文件，连错误消息都不会显示！
 
 上一个例子采用了绝对路径，不过也可以使用相对路径。
 
 本章在前面介绍了特殊符号可以用在相对文件路径中。其中的单点符（.）就很适合用于 cp 命令。记住，单点符表示当前工作目录。如果需要将一个带有很长的源对象名的文件复制到当前工作目录中时，单点符能够简化该任务。如果你的源对象名很长，使用单点符要比输入完整的目标对象名省事得多。
 
-cp -i /etc/NetworkManager/NetworkManager.conf .
+```bash
+$ cp -i /etc/NetworkManager/NetworkManager.conf .
+```
 
 cp 命令的-R 参数威力强大。可以用它在一条命令中递归地复制整个目录的内容
 
 ```bash
-ls -Fd *Scripts #-d选项只列出目录本身的信息，不列出其中的内容。一般可与l选项搭配显示目录自身详情
-cp -R Scripts/  Mod_Scripts
+$ ls -Fd *Scripts #-d选项只列出目录本身的信息，不列出其中的内容。一般可与l选项搭配显示目录自身详情
+$ cp -R Scripts/  Mod_Scripts
 ```
 
 在执行 cp –R 命令之前，目录 Mod_Scripts 并不存在。它是随着 cp –R 命令被创建的，整个 Scripts 目录中的内容都被复制到其中。注意，在新的 Mod_Scripts 目录中，所有的文件都有对应的新日期。Mod_Scripts 目录现在已经成为了 Scripts 目录的完整副本。
@@ -208,7 +240,7 @@ cp -R Scripts/  Mod_Scripts
 也可以在 cp 命令中使用通配符。
 
 ```bash
-cp *script  Mod_Scripts/
+$ cp *script  Mod_Scripts/
 ```
 
 该命令将所有以 script 结尾的文件复制到 Mod_Scripts 目录中。
@@ -218,7 +250,7 @@ cp *script  Mod_Scripts/
 如果你需要操作的文件/文件夹的名字很长，这正是制表键(Tab 健)自动补全挺身而出的时候。制表键自动补全允许你在输入文件名或目录名时按一下制表键，让 shell 帮忙将内容补充完整。
 
 ```bash
-cp really_ridiculously_long_file_name  Mod_Scripts/
+$ cp really_ridiculously_long_file_name  Mod_Scripts/
 ```
 
 在上面的例子中，我们输入了命令 cp really，然后按制表键，shell 就将剩下的文件名自动补充完整了。
@@ -232,8 +264,8 @@ cp really_ridiculously_long_file_name  Mod_Scripts/
 在 Linux 中，重命名文件称为移动（moving）。mv 命令可以将文件和目录移动到另一个位置或重新命名。
 
 ```bash
-mv fall  fzll #重命名
-mv fzll  Pictures/   #把文件fzll从/home/christine移动到了/home/christine/Pirctures
+$ mv fall  fzll #重命名
+$ mv fzll  Pictures/   #把文件fzll从/home/wallen移动到了/home/wallen/Pirctures
 ```
 
 注意，mv 将文件名从 fall 更改为 fzll，但 inode 编号和时间戳保持不变。这是因为 mv 只影响文件名。
@@ -242,13 +274,13 @@ mv fzll  Pictures/   #把文件fzll从/home/christine移动到了/home/christine
 也可以使用 mv 命令移动文件位置并修改文件名称，这些操作只需一步就能完成
 
 ```bash
-mv /home/christine/Pictures/fzll  /home/christine/fall
+$ mv /home/wallen/Pictures/fzll  /home/wallen/fall
 ```
 
 也可以使用 mv 命令移动整个目录及其内容
 
 ```bash
-mv Mod_Scripts  Old_Scripts
+$ mv Mod_Scripts  Old_Scripts
 ```
 
 ### 删除文件
@@ -256,7 +288,7 @@ mv Mod_Scripts  Old_Scripts
 bash shell 中删除文件的命令是 rm。rm 命令的基本格式非常简单。
 
 ```bash
-rm -i fall
+$ rm -i fall
 ```
 
 注意，-i 命令参数提示你是不是要真的删除该文件。bash shell 中没有回收站或垃圾箱，文件一旦删除，就无法再找回。因此，在使用 rm 命令时，要养成总是加入-i 参数的好习惯。也可以使用通配符删除成组的文件。别忘了使用-i 选项保护好自己的文件。
@@ -282,7 +314,7 @@ rm 命令的另外一个特性是，如果要删除很多文件且不受提示�
 要为一个文件创建符号链接，原始文件必须事先存在。然后可以使用 ln 命令以及-s 选项来创建符号链接。
 
 ```bash
-ln -s data_file  sl_data_file
+$ ln -s data_file  sl_data_file
 -rw-rw-r-- 1 christine christine 1092 May 21 17:27 data_file
 lrwxrwxrwx 1 christine christine    9 May 21 17:29 sl_data_file -> data_file
 ```
@@ -294,22 +326,22 @@ lrwxrwxrwx 1 christine christine    9 May 21 17:29 sl_data_file -> data_file
 另一种证明链接文件是独立文件的方法是查看 inode 编号。文件或目录的 inode 编号是一个用于标识的唯一数字，这个数字由内核分配给文件系统中的每一个对象。要查看文件或目录的 inode 编号，可以给 ls 命令加入-i 参数。
 
 ```bash
-ls -i *data_file
+$ ls -i *data_file
 296890 data_file
 296891 sl_data_file
 ```
 
 从这个例子中可以看出数据文件的 inode 编号是 296890，而 sl_data_file 的 inode 编号则是 296891。所以说它们是不同的文件。
 
-当含有一连串符号链接的链接串时，不必一个一个用 ls 查看其链接关系，可以直接使用 `readlink -f` 指令查到当前符号链接串的尽头是什么。
+当含有一连串符号链接的链接串时，不必一个一个用 ls 查看其链接关系，可以直接使用 `readlink -f filename` 指令查到当前符号链接串的尽头是什么。
 
 ---
 
 `硬链接`会创建独立的虚拟文件，其中包含了原始文件的信息及位置。但是它们从根本上而言是同一个文件。引用硬链接文件等同于引用了源文件。要创建硬链接，原始文件也必须事先存在，只不过这次使用 ln 命令时不再需要加入额外的参数了。
 
 ```bash
-ln code_file  hl_code_file
-ls -li *code_file
+$ ln code_file  hl_code_file
+$ ls -li *code_file
 296892 -rw-rw-r-- 2 christine christine 189 May 21 17:56  code_file
 296892 -rw-rw-r-- 2 christine christine 189 May 21 17:56  hl_code_file
 ```
@@ -325,13 +357,13 @@ ls -li *code_file
 在 Linux 中创建目录很简单，用 mkdir 命令即可：
 
 ```bash
-mkdir New_Dir
+$ mkdir New_Dir
 ```
 
 要想同时创建父目录和其下的子目录，需要加入-p 参数：
 
 ```bash
-mkdir -p New_Dir/Sub_Dir/Under_Dir
+$ mkdir -p New_Dir/Sub_Dir/Under_Dir
 ```
 
 mkdir 命令的-p 参数可以根据需要创建缺失的父目录。父目录是包含目录树中下一级目录的目录。
@@ -341,18 +373,16 @@ mkdir 命令的-p 参数可以根据需要创建缺失的父目录。父目录�
 也可以在整个非空目录上使用 rm 命令。使用-r 选项使得命令可以向下进入目录，删除其中的文件，然后再删除目录本身。
 
 ```bash
-rm -ri My_Dir #i用来确认是否删除每个文件/目录
+$ rm -ri My_Dir #i用来确认是否删除每个文件/目录
 ```
-
-(TODO 用 rm -r 删除的时候 在普通用户删除 root 文件时 即使不加 i 好像也会挨个确认我记得)
 
 对 rm 命令而言，-r 参数和-R 参数的效果是一样的。-R 参数同样可以递归地删除目录中的文件。shell 命令很少会就相同的功能采用不同大小写的参数。
 
 一口气删除目录及其所有内容的终极大法就是使用带有-r 参数和-f 参数的 rm 命令。rm -rf 命令既没有警告信息，也没有声音提示。这肯定是一个危险的工具，尤其是在拥有超级用户权限的时候。务必谨慎使用，请再三检查你所要进行的操作是否符合预期。
 
 ```bash
-tree Small_Dir
-rm -rf Small_Dir
+$ tree Small_Dir
+$ rm -rf Small_Dir
 ```
 
 在上面的例子中，我们使用了 tree 工具。它能够以一种美观的方式展示目录、子目录及其中的文件。如果需要了解目录结构，尤其是在删除目录之前，这款工具正好能派上用场。不过它可能并没有默认安装在你所使用的 Linux 发行版中。
@@ -362,7 +392,7 @@ rm -rf Small_Dir
 可用 file 命令确定文件的文件类型。
 
 ```bash
-file 1.txt
+$ file 1.txt
 1.txt: ASCII text  #file命令不仅能确定文件中包含的文本信息，还能确定该文本文件的字符编码，ASCII
 ```
 
@@ -382,20 +412,22 @@ file 1.txt
 更常见的场景是查看文件的末尾，如日志的末尾，查看最新产生的内容。默认情况是查看此文件最后十行的内容。
 
 ```bash
-tail log_file
+$ tail log_file
 ```
 
 可以向 tail 命令中加入-n 参数来修改所显示的行数。在下面的例子中，通过加入-n 2 使 tail 命令只显示文件的最后两行：
 
 ```bash
-tail -n 2 log_file
+$ tail -n 2 log_file
 ```
 
 -f 参数是 tail 命令的一个突出特性。它允许你在其他进程使用该文件时查看文件的内容。tail 命令会保持活动状态，并不断显示添加到文件中的内容。这是实时监测系统日志的绝妙方式。
 
-head 命令，顾名思义，会显示文件开头那些行的内容。默认情况下，它会显示文件前 10 行的文本。类似于 tail 命令，它也支持-n 参数，这样就可以指定想要显示的内容了。这两个命令都允许你在破折号后面直接输入想要显示的行数：
+head 命令，顾名思义，会显示文件开头那些行的内容。默认情况下，它会显示文件前 10 行的文本。类似于 tail 命令，它也支持-n 参数，这样就可以指定想要显示的内容了。
+
+这两个命令都允许你在破折号后面直接输入想要显示的行数：
 
 ```bash
-head log_file
-head -5 log_file
+$ head log_file
+$ head -5 log_file
 ```
