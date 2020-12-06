@@ -299,3 +299,234 @@ fsck 命令使用/etc/fstab 文件来自动检查文件系统类型。如果存�
 到目前为止，本章讲解了如何处理物理存储设备中的文件系统。Linux 还有另一些方法可以为文件系统创建逻辑存储设备。下一节将告诉你如何使用逻辑存储设备。
 
 ## 逻辑卷管理
+
+如果用标准分区在硬盘上创建了文件系统，为已有文件系统添加额外的空间多少是一种痛苦的体验。你只能在同一个物理硬盘的可用空间范围内调整分区大小。如果硬盘上没有地方了，你就必须弄一个更大的硬盘，然后手动将已有的文件系统移动到新的硬盘上。
+
+这时候可以通过将另外一个硬盘上的分区加入已有文件系统，动态地添加存储空间。Linux 逻辑卷管理器（logical volume manager，LV M）软件包正好可以用来做这个。它可以让你在无需重建整个文件系统的情况下，轻松地管理磁盘空间。
+
+### 逻辑卷管理布局
+
+逻辑卷管理的核心在于如何处理安装在系统上的硬盘分区。在逻辑卷管理的世界里，硬盘称作`物理卷`（physical volume，PV）。每个物理卷都会映射到硬盘上特定的物理分区。
+
+多个物理卷集中在一起可以形成一个`卷组`（volume group，VG）。逻辑卷管理系统将卷组视为一个物理硬盘，但事实上卷组可能是由分布在多个物理硬盘上的多个物理分区组成的。卷组提供了一个创建逻辑分区的平台，而这些逻辑分区则包含了文件系统。
+
+整个结构中的最后一层是`逻辑卷`（logical volume，LV）。逻辑卷为 Linux 提供了创建文件系统的分区环境，作用类似于到目前为止我们一直在探讨的 Linux 中的物理硬盘分区。Linux 系统将逻辑卷视为物理分区。
+
+可以使用任意一种标准 Linux 文件系统来格式化逻辑卷，然后再将它加入 Linux 虚拟目录中的某个挂载点
+
+卷组横跨多个不同的物理硬盘，覆盖了多个独立的物理分区。在卷组上层可有多个独立的逻辑卷。Linux 系统将每个逻辑卷视为一个物理分区。每个逻辑卷可以被格式化成 ext4 文件系统，然后挂载到虚拟目录中某个特定位置。
+
+某个物理硬盘也可以有一些未使用的分区。通过逻辑卷管理，你随后可以轻松地将这个未使用分区分配到已有卷组：要么用它创建一个新的逻辑卷，要么在需要更多空间时用它来扩展已有的逻辑卷。
+
+类似地，如果你给系统添加了一块硬盘，逻辑卷管理系统允许你将它添加到已有卷组，为某个已有的卷组创建更多空间，或是创建一个可用来挂载的新逻辑卷。这种扩展文件系统的方法要好用得多！
+
+### Linux 中的 LVM
+
+Linux LVM 是由 Heinz Mauelshagen 开发的，于 1998 年发布到了 Linux 社区。它允许你在 Linux 上用简单的命令行命令管理一个完整的逻辑卷管理环境。
+
+Linux LVM 有两个可用的版本。
+
+- LVM1: 最初的 LV M 包于 1998 年发布，只能用于 Linux 内核 2.4 版本。它仅提供了基本的逻辑卷管理功能。
+- LVM2: LVM 的更新版本，可用于 Linux 内核 2.6 版本。它在标准的 LVM 1 功能外提供了额外的功能。
+
+大部分采用 2.6 或更高内核版本的现代 Linux 发行版都提供对 LV M 2 的支持。除了标准的逻辑卷管理功能外，LV M 2 还提供了另外一些好用的功能。
+
+1. 快照
+
+最初的 Linux LVM 允许你在逻辑卷在线的状态下将其复制到另一个设备。这个功能叫作`快照`。在备份由于高可靠性需求而无法锁定的重要数据时，快照功能非常给力。传统的备份方法在将文件复制到备份媒体上时通常要将文件锁定。快照允许你在复制的同时，保证运行关键任务的 Web 服务器或数据库服务器继续工作。遗憾的是，LVM 1 只允许你创建只读快照。一旦创建了快照，就不能再写入东西了。
+LVM 2 允许你创建在线逻辑卷的可读写快照。有了可读写的快照，就可以删除原先的逻辑卷，然后将快照作为替代挂载上。这个功能对快速故障转移或涉及修改数据的程序试验（如果失败，需要恢复修改过的数据）非常有用。
+
+2. 条带化
+
+LVM 2 提供的另一个引人注目的功能是`条带化`（striping）。有了条带化，可跨多个物理硬盘创建逻辑卷。当 Linux LVM 将文件写入逻辑卷时，文件中的数据块会被分散到多个硬盘上。每个后继数据块会被写到下一个硬盘上。
+
+条带化有助于提高硬盘的性能，因为 Linux 可以将一个文件的多个数据块同时写入多个硬盘，而无需等待单个硬盘移动读写磁头到多个不同位置。这个改进同样适用于读取顺序访问的文件，因为 LVM 可同时从多个硬盘读取数据。
+
+> LVM 条带化不同于 RAID 条带化。LVM 条带化不提供用来创建容错环境的校验信息。事实上，LVM 条带化会增加文件因硬盘故障而丢失的概率。单个硬盘故障可能会造成多个逻辑卷无法访问。
+
+3. 镜像
+
+通过 LVM 安装文件系统并不意味着文件系统就不会再出问题。和物理分区一样，LVM 逻辑卷也容易受到断电和磁盘故障的影响。一旦文件系统损坏，就有可能再也无法恢复。
+
+LVM 快照功能提供了一些安慰，你可以随时创建逻辑卷的备份副本，但对有些环境来说可能还不够。对于涉及大量数据变动的系统，比如数据库服务器，自上次刚刚快照之后可能又要新增存储成百上千条记录。
+
+这个问题的一个解决办法就是 LVM 镜像。镜像是一个实时更新的逻辑卷的完整副本。当你创建镜像逻辑卷时，LVM 会将原始逻辑卷同步到镜像副本中。根据原始逻辑卷的大小，这可能需要一些时间才能完成。
+
+一旦原始同步完成，LVM 会为文件系统的每次写操作执行两次写入,一次写入到主逻辑卷，一次写入到镜像副本。可以想到，这个过程会降低系统的写入性能。就算原始逻辑卷因为某些原因损坏了，你手头也已经有了一个完整的最新副本
+
+### 使用 Linux LVM
+
+现在你已经知道 Linux LVM 可以做什么了，本节将讨论如何创建 LV M 来帮助组织系统上的硬盘空间。Linux LVM 包只提供了命令行程序来创建和管理逻辑卷管理系统中所有组件。有些 Linux 发行版则包含了命令行命令对应的图形化前端，但为了完全控制你的 LV M 环境，最好习惯直接使用这些命令。
+
+#### 定义物理卷
+
+创建过程的第一步就是将硬盘上的物理分区转换成 Linux LVM 使用的物理卷区段。我们的朋友 fdisk 命令可以帮忙。在创建了基本的 Linux 分区之后，你需要通过 t 命令改变分区类型。
+
+```bash
+Command (m for help): t
+Selected partition 1
+Hex code (type L to list codes): 8e
+Changed system type of partition 1 to 8e (Linux LVM)
+
+Command (m for help): p
+
+Disk /dev/sdb: 5368 MB, 5368709120 bytes
+255 heads, 63 sectors/track, 652 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk identifier: 0xa8661341
+
+Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1               1         262     2104483+  8e  Linux LVM
+
+Command (m for help): w
+The partition table has been altered!
+Calling ioctl() to re-read partition table.
+Syncing disks.
+```
+
+分区类型 8e 表示这个分区将会被用作 Linux LVM 系统的一部分，而不是一个直接的文件系统（就像你在前面看到的 83 类型的分区）。
+
+下一步是用分区来创建实际的物理卷。这可以通过 pvcreate 命令来完成。pvcreate 定义了用于物理卷的物理分区。它只是简单地将分区标记成 Linux LVM 系统中的分区而已。
+
+> 如果下一步中的 pvcreate 命令不能正常工作，很可能是因为 LVM 2 软件包没有默认安装。可以使用软件包名 lvm2 进行安装
+
+```bash
+$ sudo pvcreate /dev/sdb1
+dev_is_mpath: failed to get device for 8:17
+Physical volume "/dev/sdb1" successfully created
+```
+
+> 别被吓人的消息 dev_is_mpath: failed to get device for 8:17 或类似的消息唬住了。只要看到了 successfully created 就没问题。pvcreate 命令会检查分区是否为多路（multi-path，mpath）设备。如果不是的话，就会发出上面那段消息
+
+如果你想查看创建情况的话，可以使用 pvdisplay 命令来显示已创建的物理卷列表。
+
+```bash
+$ sudo pvdisplay /dev/sdb1
+"/dev/sdb1" is a new physical volume of "2.01 GiB"
+--- NEW Physical volume ---
+PV Name               /dev/sdb1
+VG Name
+PV Size               2.01 GiB
+Allocatable           NO
+PE Size               0
+Total PE              0
+Free PE               0
+Allocated PE          0
+PV UUID               0FIuq2-LBod-IOWt-8VeN-tglm-Q2ik-rGU2w7
+```
+
+pvdisplay 命令显示出/dev/sdb1 现在已经被标记为物理卷。注意，输出中的 VG Name 内容为空，因为物理卷还不属于某个卷组。
+
+> PE(physical extent)：物理区域是物理卷中可用于分配的最小存储单元，物理区域大小在建立卷组时指定，一旦确定不能更改，同一卷组所有物理卷的物理区域大小需一致，新的 pv 加入到 vg 后，pe 的大小自动更改为 vg 中定义的 pe 大小。
+> LE(logical extent)：逻辑区域是逻辑卷中可用于分配的最小存储单元，逻辑区域的大小取决于逻辑卷所在卷组中的物理区域的大小
+> 卷组描述区域：卷组描述区域存在于每个物理卷中，用于描述物理卷本身、物理卷所属卷组、卷组中逻辑卷、逻辑卷中物理区域的分配等所有信息，它是在使用 pvcreate 建立物理卷时建立的。
+
+#### 创建卷组
+
+下一步是从物理卷中创建一个或多个卷组。究竟要为系统创建多少卷组并没有既定的规则，你可以将所有的可用物理卷加到一个卷组，也可以结合不同的物理卷创建多个卷组。
+
+```bash
+$ sudo vgcreate Vol1 /dev/sdb1
+  Volume group "Vol1" successfully created
+$
+```
+
+输出结果平淡无奇。如果你想看看新创建的卷组的细节，可用 vgdisplay 命令。
+
+```bash
+$ sudo vgdisplay Vol1
+--- Volume group ---
+VG Name               Vol1
+System ID
+Format                lvm2
+Metadata Areas        1
+Metadata Sequence No  1
+VG Access             read/write
+VG Status             resizable
+MAX LV                0
+Cur LV                0
+Open LV               0
+Max PV                0
+Cur PV                1
+Act PV                1
+VG Size               2.00 GiB
+PE Size               4.00 MiB
+Total PE              513
+Alloc PE / Size       0 / 0
+Free  PE / Size       513 / 2.00 GiB
+VG UUID               oe4I7e-5RA9-G9ti-ANoI-QKLz-qkX4-58Wj6e
+```
+
+这个例子使用/dev/sdb1 分区上创建的物理卷，创建了一个名为 Vol1 的卷组。创建一个或多个卷组后，就可以创建逻辑卷了。
+
+#### 创建逻辑卷
+
+Linux 系统使用逻辑卷来模拟物理分区，并在其中保存文件系统。Linux 系统会像处理物理分区一样处理逻辑卷，允许你定义逻辑卷中的文件系统，然后将文件系统挂载到虚拟目录上。
+
+要创建逻辑卷，使用 lvcreate 命令。虽然你通常不需要在其他 Linux LVM 命令中使用命令行选项，但 lvcreate 命令要求至少输入一些选项。具体选项详见 man,大多数情况下你用到的只是少数几个选项。
+
+```bash
+$ sudo lvcreate -l 100%FREE -n lvtest Vol1
+Logical volume "lvtest" created
+```
+
+如果想查看你创建的逻辑卷的详细情况，可用 lvdisplay 命令
+
+```bash
+$ sudo lvdisplay Vol1
+--- Logical volume ---
+LV Path                /dev/Vol1/lvtest
+LV Name                lvtest
+VG Name                Vol1
+LV UUID                4W2369-pLXy-jWmb-lIFN-SMNX-xZnN-3KN208
+LV Write Access        read/write
+LV Creation host, time ... -0400
+LV Status              available
+# open                 0
+LV Size                2.00 GiB
+Current LE             513
+Segments               1
+Allocation             inherit
+Read ahead sectors     auto
+- currently set to     256
+Block device           253:2
+```
+
+现在可以看到你刚刚创建的逻辑卷了！注意，卷组名（Vo l 1）用来标识创建新逻辑卷时要使用的卷组。
+-l 选项定义了要为逻辑卷指定多少可用的卷组空间。注意，你可以按照卷组空闲空间的百分比来指定这个值。本例中为新逻辑卷使用了所有的空闲空间。
+你可以用-l 选项来按可用空间的百分比来指定这个大小，或者用-L 选项以字节、千字节（KB）、兆字节（MB）或吉字节（GB）为单位来指定实际的大小。-n 选项允许你为逻辑卷指定一个名称（在本例中称作 lvtest）。
+
+#### 创建文件系统
+
+运行完 lvcreate 命令之后，逻辑卷就已经产生了，但它还没有文件系统。你必须使用相应的命令行程序来创建所需要的文件系统
+
+```bash
+$ sudo mkfs.ext4 /dev/Vol1/lvtest
+```
+
+在创建了新的文件系统之后，可以用标准 Linux mount 命令将这个卷挂载到虚拟目录中，就跟它是物理分区一样。唯一的不同是你需要用特殊的路径来标识逻辑卷。
+
+```bash
+$ sudo mount /dev/Vol1/lvtest /mnt/my_partition
+```
+
+注意，mkfs.ext4 和 mount 命令中用到的路径都有点奇怪。路径中使用了卷组名和逻辑卷名，而不是物理分区路径。文件系统被挂载之后，就可以访问虚拟目录中的这块新区域了。
+
+#### 修改 LVM
+
+Linux LVM 的好处在于能够动态修改文件系统，因此最好有工具能够让你实现这些操作。在 Linux 有一些工具允许你修改现有的逻辑卷管理配置。
+
+如果你无法通过一个很炫的图形化界面来管理你的 Linux LVM 环境，也不是什么都干不了。在本章中你已经看到了一些 Linux LVM 命令行程序的实际用法。还有一些其他的常见命令可以用来管理 LVM 的设置。
+
+- vgchange 激活和禁用卷组
+- vgremove 删除卷组
+- vgextend 将物理卷加到卷组中
+- vgreduce 从卷组中删除物理卷
+- lvextend 增加逻辑卷的大小
+- lvreduce 减小逻辑卷的大小
+
+通过使用这些命令行程序，就能完全控制你的 Linux LVM 环境
+
+> 在手动增加或减小逻辑卷的大小时，要特别小心。逻辑卷中的文件系统需要手动修整来处理大小上的改变。大多数文件系统都包含了能够重新格式化文件系统的命令行程序，比如用于 ext2、ext3 和 ext4 文件系统的 resize2fs 程序。
