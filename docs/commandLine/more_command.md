@@ -4,7 +4,7 @@
 
 当程序运行在系统上时，我们称之为进程（process）。想监测这些进程，需要熟悉 ps 命令的用法。ps 命令好比工具中的瑞士军刀，它能输出运行在系统上的所有程序的许多信息。
 
-默认情况下，ps 命令只会显示运行在当前控制台下的属于当前用户的进程。在此例中，我们只运行了 bash shell（注意，shell 也只是运行在系统上的另一个程序而已）以及 ps 命令本身。上例中的基本输出显示了程序的进程 ID（Process ID，PID）、它们运行在哪个终端（TTY）以及进程已用的 CPU 时间。
+默认情况下，ps 命令只会显示运行在当前控制台下的属于当前用户的进程。直接执行 ps 命令，可以发现我们只运行了 bash shell（注意，shell 也只是运行在系统上的另一个程序而已）以及 ps 命令本身。可以看到基本输出显示了程序的进程 ID（Process ID，PID）、它们运行在哪个终端（TTY）以及进程已用的 CPU 时间。
 
 Linux 系统中使用的 GNU ps 命令支持 3 种不同类型的命令行参数：
 
@@ -12,12 +12,15 @@ Linux 系统中使用的 GNU ps 命令支持 3 种不同类型的命令行参数
 - BSD 风格的参数，前面不加破折线；伯克利软件发行版（Berkeley software distribution，BSD）是加州大学伯克利分校开发的一个 Unix 版本。它和 AT & T Unix 系统有许多细小的不同
 - GNU 风格的长参数，前面加双破折线。
 
-一些常用的参数组合：
+---
+
+Unix 风格一些常用的参数组合：
 
 ```bash
-ps -ef #想查看系统上运行的所有进程  -e参数指定显示所有运行在系统上的进程；-f参数则扩展了输出，这些扩展的列包含了有用的信息。
+$ ps -ef #查看系统上运行的所有进程  -e参数指定显示所有运行在系统上的进程；-f参数则扩展了输出，这些扩展的列包含了有用的信息。
 UID        PID  PPID  C STIME TTY          TIME CMD
 root         1     0  0 11:29 ?        00:00:01 /sbin/init
+...
 ```
 
 - UID：启动这些进程的用户。
@@ -32,7 +35,7 @@ root         1     0  0 11:29 ?        00:00:01 /sbin/init
 如果想要获得更多的信息，可采用-l 参数，它会产生一个长格式输出。
 
 ```bash
-ps -l
+$ ps -l
 F S  UID PID  PPID  C PRI  NI ADDR SZ WCHAN  TTY      TIME   CMD
 0 S  500 3081  3080  0  80   0 -  1173 wait pts/0   00:00:00 bash
 0 R  500 4463  3081  1  80   0 -  1116 -    pts/0   00:00:00 ps
@@ -53,7 +56,7 @@ F S  UID PID  PPID  C PRI  NI ADDR SZ WCHAN  TTY      TIME   CMD
 在使用 BSD 参数时，ps 命令会自动改变输出以模仿 BSD 格式。大部分的输出列跟使用 Unix 风格参数时的输出是一样的，只有一小部分不同。
 
 ```bash
-ps -l
+$ ps -l
 F  UID  PID PPID PRI  NI  VSZ  RSS WCHAN  STAT TTY      TIME COMMAND
 0  500 3081 3080  20   0 4692 1432 wait   Ss   pts/0    0:00 -bash
 0  500 5104 3081  20   0 4468  844 -      R+   pts/0    0:00 ps l
@@ -134,7 +137,7 @@ kill 命令可通过进程 ID（PID）给进程发信号。默认情况下，kil
 TERM 信号告诉进程可能的话就停止运行。不过，如果有不服管教的进程，那它通常会忽略这个请求。如果需要强制终止，可以指定广为认知的-9 参数，即 KILL 信号。-s 参数支持指定其他信号（用信号名或信号值）。
 
 ```bash
-kill -s HUP 3940
+$ kill -s HUP 3940
 ```
 
 要检查 kill 命令是否有效，可再运行 ps 或 top 命令，看看问题进程是否已停止。
@@ -142,7 +145,7 @@ kill -s HUP 3940
 killall 命令非常强大，它支持通过进程名而不是 PID 来结束进程。killall 命令也支持通配符，这在系统因负载过大而变得很慢时很有用。
 
 ```bash
-killall http*
+$ killall http*
 ```
 
 上例中的命令结束了所有以 http 开头的进程，比如 Apache Web 服务器的 httpd 服务。
@@ -176,7 +179,7 @@ mount 命令提供如下四部分信息：
 要手动在虚拟目录中挂载设备，需要以 root 用户身份登录，或是以 root 用户身份运行 sudo 命令。下面是手动挂载媒体设备的基本命令：
 
 ```bash
-mount -t type device directory
+$ mount -t type device directory
 ```
 
 type 参数指定了磁盘被格式化的文件系统类型。Linux 可以识别非常多的文件系统类型。如果是和 Windows PC 共用这些存储设备，通常得使用下列文件系统类型。
@@ -191,7 +194,7 @@ type 参数指定了磁盘被格式化的文件系统类型。Linux 可以识别
 后面两个参数定义了该存储设备的设备文件的位置以及挂载点在虚拟目录中的位置。比如说，手动将 U 盘/dev/sdb1 挂载到/media/disk，可用下面的命令
 
 ```bash
-mount -t vfat /dev/sdb1 /media/disk
+$ mount -t vfat /dev/sdb1 /media/disk
 ```
 
 媒体设备挂载到了虚拟目录后，root 用户就有了对该设备的所有访问权限，而其他用户的访问则会被限制。你可以通过目录权限（后文将介绍权限）指定用户对设备的访问权限。
@@ -217,13 +220,13 @@ umount [directory | device ]
 umount 命令支持通过设备文件或者是挂载点来指定要卸载的设备。如果有任何程序正在使用设备上的文件，系统就不会允许你卸载它：
 
 ```bash
-[root@testbox mnt]# umount /home/rich/mnt
+# umount /home/rich/mnt
 umount: /home/rich/mnt: device is busy
-[root@testbox mnt]# cd /home/rich
-[root@testbox rich]# umount /home/rich/mnt
-[root@testbox rich]# ls -l mnt
+# cd /home/rich
+# umount /home/rich/mnt
+# ls -l mnt
 total 0
-[root@testbox rich]#
+#
 ```
 
 上例中，命令行提示符仍然在挂载设备的文件系统目录中，所以 umount 命令无法卸载该镜像文件。一旦命令提示符移出该镜像文件的文件系统，umount 命令就能卸载该镜像文件。
@@ -235,6 +238,7 @@ total 0
 有时你需要知道在某个设备上还有多少磁盘空间。df 命令可以让你很方便地查看所有已挂载磁盘的使用情况
 
 ```bash
+$ df
 Filesystem           1K-blocks      Used Available Use% Mounted on
 /dev/sda2             18251068   7703964   9605024  45% /
 /dev/sda1               101086     18680     77187  20% /boot
@@ -245,7 +249,8 @@ tmpfs                   119536         0    119536   0% /dev/shm
 df 命令会显示每个有数据的已挂载文件系统。如你在前例中看到的，有些已挂载设备仅限系统内部使用。可以注意到，默认大小均为 1024 字节为单位大小，不利于直观查看，可附加-h 参数进行更直观的查看。它会把输出中的磁盘空间按照用户易读的形式显示，通常用 M 来替代兆字节，用 G 替代吉字节。
 
 ```bash
-$ df -h Filesystem            Size  Used Avail Use% Mounted on
+$ df -h
+Filesystem            Size  Used Avail Use% Mounted on
 /dev/sdb2              18G  7.4G  9.2G  45% /
 /dev/sda1              99M   19M   76M  20% /boot
 tmpfs                 117M     0  117M   0% /dev/shm
@@ -260,9 +265,20 @@ $
 每行输出左边的数值是每个文件或目录占用的磁盘块数。注意，这个列表是从目录层级的最底部开始，然后按文件、子目录、目录逐级向上。
 这么用 du 命令（不加参数，用默认参数）作用并不大。我们更想知道每个文件和目录占用了多大的磁盘空间，但如果还得逐页查找的话就没什么意义了。下面是能让 du 命令用起来更方便的几个命令行参数。
 
+- -s：同时查询多目录时，依次显示每个输出参数(目录)的总大小。
 - -c：同时查询多目录时，显示所有已列出文件总的大小。
 - -h：按用户易读的格式输出大小，即用 K 替代千字节，用 M 替代兆字节，用 G 替代吉字节。
-- -s：同时查询多目录时，依次显示每个输出参数(目录)的总大小。
+
+```bash
+$ du -sh ./Documents/ ./Desktop/
+3.4G    ./Documents/
+58G     ./Desktop/
+$ du -shc ./Documents/ ./Desktop/
+3.4G    ./Documents/
+58G     ./Desktop/
+62G     总用量
+
+```
 
 ## 文件数据相关
 
@@ -283,7 +299,7 @@ Sep 13 07:10:09 testbox smartd[2718]: Device: /dev/sda, opened
 -k 和-t 参数在对按字段分隔的数据进行排序时非常有用，例如/etc/passwd 文件。可以用-t 参数来指定字段分隔符，然后用-k 参数来指定排序的字段。举个例子，对密码文件/etc/passwd 根据用户 ID 进行数值排序，可以这么做：
 
 ```bash
-sort -t ':' -k 3 -n /etc/passwd
+$ sort -t ':' -k 3 -n /etc/passwd
 root:x:0:0::/root:/bin/bash
 bin:x:1:1::/:/usr/bin/nologin
 daemon:x:2:2::/:/usr/bin/nologin
@@ -298,7 +314,7 @@ uuidd:x:68:68::/:/usr/bin/nologin
 -n 参数在排序数值时非常有用，比如 du 命令的输出。
 
 ```bash
-du -sh * | sort -nr
+$ du -sh * | sort -nr
 1008k   mrtg-2.9.29.tar.gz
 972k    bldg1 888k    fbs2.pdf
 760k    Printtest
@@ -380,26 +396,26 @@ five
 
 正则表达式中的方括号表明 grep 应该搜索包含 t 或者 f 字符的匹配。如果不用正则表达式，grep 就会搜索匹配字符串 tf 的文本。
 
-egrep 命令是 grep 的一个衍生，支持 POSIX 扩展正则表达式。POSIX 扩展正则表达式含有更多的可以用来指定匹配模式的字符（后文会讲）。fgrep 则是另外一个版本，支持将匹配模式指定为用换行符分隔的一列固定长度的字符串。这样就可以把这列字符串放到一个文件中，然后在 fgrep 命令中用其在一个大型文件中搜索字符串了。egrep 与 grep -E 相同。 fgrep 与 grep -F 相同。
+egrep 命令是 grep 的一个衍生，支持 POSIX 扩展正则表达式。POSIX 扩展正则表达式含有更多的可以用来指定匹配模式的字符（后文会讲）。fgrep 则是另外一个版本，支持将匹配模式指定为用换行符分隔的一列固定长度的字符串。这样就可以把这列字符串放到一个文件中，然后在 fgrep 命令中用其在一个大型文件中搜索字符串了。egrep 与 grep -E 相同。 fgrep 与 grep -F 相同,所以掌握好 grep 就好。
 
 ### 压缩与归档
 
-gzip 是非常流行的压缩工具，使用方式也很简单
+gzip 是非常流行的压缩工具软件包，使用方式也很简单,这个软件包含有下面的工具。
 
 - gzip：用来压缩文件。
 - gzcat：用来查看压缩过的文本文件的内容。
 - gunzip：用来解压文件
 
 ```bash
-gzip myprog #压缩文件
+$ gzip myprog #压缩文件
 ls -l my*
 -rwxrwxr-x 1 rich rich 2197 2007-09-13 11:29 myprog.gz
 ```
 
 gzip 命令会压缩你在命令行指定的文件。也可以在命令行指定多个文件名甚至用通配符来一次性批量压缩文件。
 
-```
-gzip my*
+```bash
+$ gzip my*
 ```
 
 虽然 zip 命令能够很好地将数据压缩和归档进单个文件，但它不是 Unix 和 Linux 中的标准归档工具。目前，Unix 和 Linux 上最广泛使用的归档工具是 tar 命令。
@@ -416,7 +432,7 @@ DMI 充当了管理工具和系统层之间接口的角色。它建立了标准�
 一个小技巧是，在笔记本售后网站一般需要输入序列号查询，以下命令可以直接显示出。不用把笔记本翻过来到背面去记序列号再查询了。
 
 ```bash
-sudo dmidecode -s system-serial-number
+$ sudo dmidecode -s system-serial-number
 ```
 
 同时，也可以很方便的查看 BIOS 版本 内存频率(也许是唯一查看内存频率的方法)等信息。

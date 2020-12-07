@@ -59,7 +59,7 @@ $ man xterm
 $ tldr tar   #查看tar命令的简明使用方式
 ```
 
-若你出现如下错误，说明你的网络环境下，tldr 命令查询的 github raw 网址已经被 GFW 墙掉了。请使用全局代理或 proxychains 前缀。
+若你出现如下错误，说明你的网络环境下，tldr 命令查询的 github raw 网址已经被 GFW 墙掉了。请使用[全局代理](https://archlinuxstudio.github.io/ArchLinuxTutorial/#/advanced/transparentProxy)或 [proxychains 前缀](https://archlinuxstudio.github.io/ArchLinuxTutorial/#/advanced/fxckGFW)。
 
 ```bash
 Error fetching from tldr: <urlopen error [Errno 111] Connection refused>
@@ -156,7 +156,7 @@ Linux 经常采用隐藏文件来保存配置信息。在 Linux 上，隐藏文�
 - 问号（?）代表一个字符；
 - 星号（\*）代表零个或多个字符。
 
-在过滤器中使用星号和问号被称为`文件扩展匹配`（file globbing），指的是使用通配符进行模式匹配的过程。通配符正式的名称叫作元`字符通配符`（metacharacter wildcards）。除了星号和问号之外，还有更多的元字符通配符可用于文件扩展匹配。可以使用中括号。
+在过滤器中使用星号和问号被称为`文件扩展匹配`（file globbing），指的是使用通配符进行模式匹配的过程。通配符正式的名称叫作`元字符通配符`（metacharacter wildcards）。除了星号和问号之外，还有更多的元字符通配符可用于文件扩展匹配。可以使用中括号。
 
 ```bash
 $ ls -l my_scr[ai]pt
