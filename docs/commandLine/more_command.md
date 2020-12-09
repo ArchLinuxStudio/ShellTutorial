@@ -436,3 +436,11 @@ $ sudo dmidecode -s system-serial-number
 ```
 
 同时，也可以很方便的查看 BIOS 版本 内存频率(也许是唯一查看内存频率的方法)等信息。
+
+---
+
+upower 可以查看电池相关信息，使用如下命令获取详情。可以看到电池损耗，充电比率等实用信息
+
+```bash
+upower -i `upower -e | grep 'BAT'`
+```
