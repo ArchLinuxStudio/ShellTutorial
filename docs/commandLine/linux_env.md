@@ -93,10 +93,10 @@ Hello
 
 ```bash
 $ my_variable="I am Global now"
-$export my_variable
+$ export my_variable
 ```
 
-在定义并导出局部环境变量 my_variable 后，bash 命令启动了一个子 shell。在这个子 shell 中能够正确的显示出变量 my_variable 的值。该变量能够保留住它的值是因为 export 命令使其变成了全局环境变量。
+在定义并导出局部环境变量 my_variable 后，可通过 bash 命令启动一个子 shell。在这个子 shell 中能够正确的显示出变量 my_variable 的值。该变量能够保留住它的值是因为 export 命令使其变成了全局环境变量。
 
 **修改子 shell 中全局环境变量并不会影响到父 shell 中该变量的值。除此之外，子 shell 甚至无法使用 export 命令改变父 shell 中全局环境变量的值。**
 
@@ -127,7 +127,7 @@ $ echo $PATH
 /usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
 ```
 
-输出中显示了有 8 个可供 shell 用来查找命令和程序的目录。PATH 中的目录使用冒号分隔。如果命令或者程序的位置没有包括在 PATH 变量中，那么如果不使用绝对路径的话，shell 是没法找到的。如果 shell 找不到指定的命令或程序，它会产生一个错误信息：`command not found`。
+输出中显示了有 8 个可供 shell 用来查找命令和程序的目录。PATH 中的目录使用冒号分隔。如果命令或者程序的位置没有包括在 PATH 变量中，那么如果不使用绝对路径的话，shell 是没法找到的。如果 shell 找不到指定的命令或程序，它会产生一个经典的错误信息：`command not found`。
 
 一般来说，默认环境变量有很多，在需要用到时查阅用法即可，不必全部记忆。
 
@@ -145,7 +145,7 @@ $ PATH=$PATH:.
 
 对 PATH 变量的修改只能持续到退出或重启系统。这种效果并不能一直持续。在下一节中，你会学到如何永久保持环境变量的修改效果。
 
-## 定位系统环境变量 TODO
+## 定位系统环境变量
 
 在你登入 Linux 系统启动一个 bash shell 时，默认情况下 bash 会在几个文件中查找命令。这些文件叫作启动文件或环境文件。bash 检查的启动文件取决于你启动 bash shell 的方式。启动 bash shell 有 3 种方式：
 
@@ -167,7 +167,7 @@ $ PATH=$PATH:.
 
 /etc/profile 文件是系统上默认的 bash shell 的主启动文件。系统上的每个用户登录时都会执行这个启动文件
 
-> 要留意的是有些 Linux 发行版使用了可拆卸式认证模块（Pluggable Authentication Modules ，PAM）。在这种情况下，PAM 文件会在 bash shell 启动之前处理，这些文件中可能会包含环境变量。PAM 文件包括/etc/environment 文件和\$HOME/.pam_environment 文件。PAM 更多的相关信息可以在http://linux-pam.org中找到。
+> 要留意的是有些 Linux 发行版使用了可拆卸式认证模块（Pluggable Authentication Modules ，PAM）。在这种情况下，PAM 文件会在 bash shell 启动之前处理，这些文件中可能会包含环境变量。PAM 文件包括/etc/environment 文件和\$HOME/.pam_environment 文件。PAM 更多的相关信息可以在 http://linux-pam.org 中找到。
 
 另外 4 个启动文件是针对用户的，可根据个人需求定制。注意，这四个文件都以点号开头，这说明它们是隐藏文件（不会在通常的 ls 命令输出列表中出现）。它们位于用户的 HOME 目录下，所以每个用户都可以编辑这些文件并添加自己的环境变量，这些环境变量会在每次启动 bash shell 会话时生效。
 
@@ -367,6 +367,7 @@ one
 
 ```bash
 $ echo ${mytest[2]}
+three
 ```
 
 > 环境变量数组的索引值都是从零开始。这通常会带来一些困惑。
