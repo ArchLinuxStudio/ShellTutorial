@@ -442,5 +442,5 @@ $ sudo dmidecode -s system-serial-number
 upower 可以查看电池相关信息，使用如下命令获取详情。可以看到电池损耗，充电比率等实用信息
 
 ```bash
-upower -i `upower -e | grep 'BAT'`
+$ upower -i `upower -e | grep 'BAT'`
 ```

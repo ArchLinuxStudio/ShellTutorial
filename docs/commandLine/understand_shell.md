@@ -27,12 +27,12 @@ $
 
 在生成子 shell 进程时，只有`部分`父进程的环境被复制到子 shell 环境中。这会对包括变量在内的一些东西造成影响，我们会在后续谈及相关的内容。
 
-同样的，你也可以在子 shell 中不停的继续创建子 shell,它们最终会形成一个嵌套结构，可以用 ps -forest 命令展示了这些子 shell 间的嵌套结构。可以利用 exit 命令有条不紊地退出各个子 shell。
+同样的，你也可以在子 shell 中不停的继续创建子 shell,它们最终会形成一个嵌套结构，可以用 ps --forest 命令展示了这些子 shell 间的嵌套结构。可以利用 exit 命令有条不紊地退出各个子 shell。
 
 另一个创建子 shell 的方式是使用`进程列表`。命令列表要想成为进程列表，这些命令必须包含在括号里。
 
 ```bash
-(pwd ; ls ; cd /etc ; pwd ; cd ; pwd ; ls)
+$ (pwd ; ls ; cd /etc ; pwd ; cd ; pwd ; ls)
 ```
 
 括号的加入使一串命令变成了进程列表，生成了一个子 shell 来执行对应的命令。
@@ -44,7 +44,7 @@ $
 下面的例子中使用了一串命令列表，列表尾部是 echo \$BASH_SUBSHELL
 
 ```bash
-pwd ; ls ; cd /etc ; pwd ; cd ; pwd ; ls ; echo $BASH_SUBSHELL
+$ pwd ; ls ; cd /etc ; pwd ; cd ; pwd ; ls ; echo $BASH_SUBSHELL
 ...
 0
 ```
@@ -52,7 +52,7 @@ pwd ; ls ; cd /etc ; pwd ; cd ; pwd ; ls ; echo $BASH_SUBSHELL
 在命令输出的最后，显示的是数字 0。这就表明这些命令不是在子 shell 中运行的。要是使用`进程列表`的话，结果就不一样了。在列表最后加入 echo \$BASH_SUBSHELL。
 
 ```bash
-(pwd ; ls ; cd /etc ; pwd ; cd ; pwd ; ls ; echo $BASH_SUBSHELL)
+$ (pwd ; ls ; cd /etc ; pwd ; cd ; pwd ; ls ; echo $BASH_SUBSHELL)
 ...
 1
 ```
@@ -77,13 +77,13 @@ $ ( pwd ; (echo $BASH_SUBSHELL))
 在后台模式中运行命令可以在处理命令的同时让出 CLI，以供他用。演示后台模式的一个经典命令就是 sleep。sleep 命令接受一个参数，该参数是你希望进程等待（睡眠）的秒数。这个命令在脚本中常用于引入一段时间的暂停。命令 sleep 10 会将会话暂停 10 秒钟，然后返回 shell CLI 提示符。
 
 ```bash
-sleep 10
+$ sleep 10
 ```
 
 要想将命令置入后台模式，可以在命令末尾加上字符&。把 sleep 命令置入后台模式可以让我们利用 ps 命令来小窥一番。
 
 ```bash
-$ sleep 3000&
+$ sleep 3000 &
 [1] 2396
 $ ps -f
 UID        PID  PPID  C STIME TTY          TIME CMD
@@ -111,7 +111,9 @@ jobs 命令在方括号中显示出作业号（1）。它还显示了作业的�
 一旦后台作业完成，就会显示出结束状态。
 
 ```bash
-[1]+  Done                 sleep 3000 &
+$ jobs -l
+[1]+ 28331 Done                 sleep 3000 &
+$
 ```
 
 > 需要提醒的是：后台作业的结束状态可未必会一直等待到合适的时候才现身。当作业结束状态突然出现在屏幕上的时候，你可别吃惊啊。
@@ -119,11 +121,13 @@ jobs 命令在方括号中显示出作业号（1）。它还显示了作业的�
 之前说过，进程列表是运行在子 shell 中的一条或多条命令。使用包含了 sleep 命令的进程列表，并显示出变量 BASH_SUBSHELL，结果和期望的一样。
 
 ```bash
-(sleep 2 ; echo $BASH_SUBSHELL ; sleep 2)
+$ (sleep 2 ; echo $BASH_SUBSHELL ; sleep 2)
 1
 ```
 
-在上面的例子中，有一个 2 秒钟的暂停，显示出的数字 1 表明只有一个子 shell，在返回提示符之前又经历了另一个 2 秒钟的暂停。没什么大事。将相同的进程列表置入后台模式会在命令输出上表现出些许不同。
+在上面的例子中，有一个 2 秒钟的暂停，显示出的数字 1 表明只有一个子 shell，在返回提示符之前又经历了另一个 2 秒钟的暂停。没什么特别的。
+
+将相同的进程列表置入后台模式会在命令输出上表现出些许不同。
 
 ```bash
 $ (sleep 2 ; echo $BASH_SUBSHELL ; sleep 2)&
@@ -212,7 +216,8 @@ $
 
 ```bash
 $ ps -f
-UID        PID  PPID  C STIME TTY          TIME CMD christi+  2743  2742  0 17:09 pts/9    00:00:00 -bash
+UID        PID  PPID  C STIME TTY          TIME CMD
+christi+  2743  2742  0 17:09 pts/9    00:00:00 -bash
 christi+  2801  2743  0 17:16 pts/9    00:00:00 ps -f
 $
 ```
