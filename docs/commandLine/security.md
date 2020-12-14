@@ -32,25 +32,16 @@ systemd-coredump:x:978:978:systemd Core Dumper:/:/usr/bin/nologin
 uuidd:x:68:68::/:/usr/bin/nologin
 avahi:x:973:973:Avahi mDNS/DNS-SD daemon:/:/usr/bin/nologin
 colord:x:972:972:Color management daemon:/var/lib/colord:/usr/bin/nologin
-deepin-anything-server:x:977:977:Deepin Anthing Server:/:/usr/bin/nologin
-deepin_anything_server:x:976:976:Deepin Anything Server:/:/usr/bin/nologin
-deepin-sound-player:x:975:975:Deepin Sound Player:/:/usr/bin/nologin
-deepin-daemon:x:974:974:Deepin Daemon:/:/usr/bin/nologin
-lightdm:x:971:971:Light Display Manager:/var/lib/lightdm:/usr/bin/nologin
 polkitd:x:102:102:PolicyKit daemon:/:/usr/bin/nologin
 rtkit:x:133:133:RealtimeKit:/proc:/usr/bin/nologin
 usbmux:x:140:140:usbmux user:/:/usr/bin/nologin
 wallen:x:1000:985::/home/wallen:/bin/bash
 git:x:970:970:git daemon user:/:/usr/bin/git-shell
-nvidia-persistenced:x:143:143:NVIDIA Persistence Daemon:/:/usr/bin/nologin
 cups:x:209:209:cups helper user:/:/usr/bin/nologin
 dhcpcd:x:969:969:dhcpcd privilege separation:/var/lib/dhcpcd:/usr/bin/nologin
 sddm:x:968:968:Simple Desktop Display Manager:/var/lib/sddm:/usr/bin/nologin
 geoclue:x:967:967:Geoinformation service:/var/lib/geoclue:/usr/bin/nologin
-gdm:x:120:120:Gnome Display Manager:/var/lib/gdm:/usr/bin/nologin
 deluge:x:966:966:Deluge BitTorrent daemon:/srv/deluge:/usr/bin/nologin
-redsocks:x:965:965:redsocks nologin sysuser:/:/usr/bin/nologin
-mysql:x:964:964:MariaDB:/var/lib/mysql:/usr/bin/nologin
 ```
 
 root 用户账户是 Linux 系统的管理员，固定分配给它的 UID 是 0。就像上例中显示的，Linux 系统会为各种各样的功能创建不同的用户账户，而这些账户并不是真的用户。这些账户叫作`系统账户`，是系统上运行的各种服务进程访问资源用的特殊账户。所有运行在后台的服务都需要用一个系统用户账户登录到 Linux 系统上。
@@ -81,7 +72,7 @@ Linux 为系统账户预留了 1000 以下的 UID 值。有些服务甚至要用
 /etc/shadow 文件为系统上的每个用户账户都保存了一条记录。记录就像下面这样：
 
 ```bash
-wallen:$6$inJRhswsgTqYbpOp$TjcILRMDZqa6noSe87RMJQpkqS9zGdk/lLovn4M1xYjMpKLY0mlEGJl15IossZF/5ZlJlqnjyDia1tS5RuTTs.:18361:0:99999:7:::
+wallen:$6$inJRhswsgTqYbpOp$TjasdasdqS9zGdk/lLovn4M1xxczcl15IossZF/5ZlJlqnjyDia1tS5RuTTs.:18361:0:99999:7:::
 ```
 
 在/etc/shadow 文件的每条记录中都有 9 个字段
@@ -155,8 +146,7 @@ $ sudo useradd -m test
 你会发现，在创建新用户账户时使用命令行参数可以更改系统指定的默认值。但如果总需要修改某个值的话，最好还是修改一下系统的默认值。可以在-D 选项后跟上一个指定的值来修改系统默认的新用户设置。如下示例
 
 ```bash
-# useradd -D -s /bin/tsch
-
+$ sudo useradd -D -s /bin/tsch
 ```
 
 现在，useradd 命令会将 tsch shell 作为所有新建用户的默认登录 shell。
@@ -170,7 +160,7 @@ $ sudo useradd -m test
 下面是用 userdel 命令删除已有用户账户的一个例子。
 
 ```bash
-$sudo userdel -r test
+$ sudo userdel -r test
 ```
 
 > 在有大量用户的环境中使用-r 参数时要特别小心。你永远不知道用户是否在其 HOME 目录下存放了其他用户或其他程序要使用的重要文件。记住，在删除用户的 HOME 目录之前一定要检查清楚！
@@ -301,6 +291,7 @@ Linux 发行版在处理默认组的成员关系时略有差异。有些 Linux �
 与用户账户类似，组信息也保存在系统的一个文件中。/etc/group 文件包含系统上用到的每个组的信息。下面是一些来自 Linux 系统上/etc/group 文件中的典型例子。
 
 ```bash
+$ cat /etc/group
 root:x:0:root
 sys:x:3:bin
 mem:x:8:
@@ -346,20 +337,16 @@ systemd-coredump:x:978:
 uuidd:x:68:
 avahi:x:973:
 colord:x:972:
-lightdm:x:971:
 polkitd:x:102:
 rtkit:x:133:
 usbmux:x:140:
 git:x:970:
-nvidia-persistenced:x:143:
 cups:x:209:
 dhcpcd:x:969:
 sddm:x:968:
 geoclue:x:967:
 gdm:x:120:
 deluge:x:966:
-redsocks:x:965:
-mysql:x:964:
 vboxusers:x:108:
 vboxsf:x:109:
 wallen:x:1000:
