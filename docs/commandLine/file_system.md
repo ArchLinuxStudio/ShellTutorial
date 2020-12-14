@@ -119,97 +119,21 @@ Linux 提供了一些不同的工具，我们可以利用它们轻松地在命�
 
 ### 创建分区
 
-一开始，你必须在存储设备上创建分区来容纳文件系统。分区可以是整个硬盘，也可以是部分硬盘，以容纳虚拟目录的一部分。此部分介绍一下广泛使用的 fdisk 工具，除此之外，cfdisk 也是一个命令行下非常好用的可视化分区。
+一开始，你必须在存储设备上创建分区来容纳文件系统。分区可以是整个硬盘，也可以是部分硬盘，以容纳虚拟目录的一部分。此部分推荐使用的终端中好用的 cfdisk 工具，除此之外，fdisk 也是一个使用广泛的传统工具，不过使用较为麻烦，不推荐使用。
 
-fdisk 工具用来帮助管理安装在系统上的任何存储设备上的分区。它是个交互式程序，允许你输入命令来逐步完成硬盘分区操作。
-
-要启动 fdisk 命令，你必须指定要分区的存储设备的设备名，另外还得有超级用户权限。如果在没有对应权限的情况下使用该命令，你会得到类似于下面这种错误提示。
+要启动 cfdisk 命令，你必须指定要分区的存储设备的设备名，另外还得有超级用户权限。如果在没有对应权限的情况下使用该命令，你会得到类似于下面这种错误提示。
 
 ```bash
-$ fdisk /dev/sdb
+$ cfdisk /dev/sdb
 
 Unable to open /dev/sdb
 ```
 
 > 有时候，创建新磁盘分区最麻烦的事情就是找出安装在 Linux 系统中的物理磁盘。Linux 采用了一种标准格式来为硬盘分配设备名称，但是你得熟悉这种格式。对于老式的 IDE 驱动器，Linux 使用的是/dev/hdx。其中 x 表示一个字母，具体是什么要根据驱动器的检测顺序（第一个驱动器是 a，第二个驱动器是 b，以此类推）。对于较新的 SATA 驱动器和 SCSI 驱动器，Linux 使用/dev/sdx。其中的 x 具体是什么也要根据驱动器的检测顺序（和之前一样，第一个驱动器是 a，第二个驱动器是 b，以此类推）。更新式的 SSD 固态硬盘一般以/dev/nvme0nx 来标识。在格式化分区之前，最好再检查一下是否正确指定了驱动器。
 
-如果你拥有超级用户权限并指定了正确的驱动器，那就可以进入 fdisk 工具的操作界面了。
+如果你拥有超级用户权限并指定了正确的驱动器，那就可以进入 cfdisk 工具的操作界面了。
 
-```bash
-sudo fdisk /dev/sdb
-Changes will remain in memory only  until you decide to write them.
-Be careful before using the write command.
-
-Device does not contains a recognized partition table.
-Created a new DOS disklable with disk identifier 0xd3f759b5.
-
-Command (m for help):
-```
-
-> 如果这是你第一次给该存储设备分区，fdisk 会警告你设备上没有分区表。
-
-fdisk 交互式命令提示符使用单字母命令来告诉 fdisk 做什么。基本只需要记住常用的命令即可。
-
-对于初学者，可以用 p 命令将一个存储设备的详细信息显示出来。
-
-```bash
-Command (m for help): p
-Disk /dev/sdb: 5368 MB, 5368709120 bytes
-255 heads, 63 sectors/track, 652 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
-Sector size (logical/physical): 512 bytes / 512 bytes
-I/O size (minimum/optimal): 512 bytes / 512 bytes
-Disk identifier: 0x11747e88
-Device Boot      Start         End      Blocks   Id  System
-Command (m for help):
-```
-
-输出显示这个存储设备有 5368 MB（5 GB）的空间。存储设备明细后的列表说明这个设备上是否已有分区。这个例子中的输出中没有显示任何分区，所以设备还未分区。
-
-下一步，可以使用 n 命令在该存储设备上创建新的分区。
-
-```bash
-Command (m for help): n
-Command action
-e   extended
-p   primary partition (1-4)
-p
-Partition number (1-4): 1
-First cylinder (1-652, default 1): 1
-Last cylinder, +cylinders or +size{K,M,G} (1-652, default 652): +2G
-Command (m for help):
-```
-
-分区可以按`主分区`（primary partition）或`扩展分区`（extended partition）创建。主分区可以被文件系统直接格式化，而扩展分区则只能容纳其他逻辑分区。扩展分区出现的原因是每个存储设备上只能有 4 个分区。可以通过创建一个扩展分区，然后在扩展分区内创建逻辑分区进行扩展。上例中创建了一个主分区，在存储设备上给它分配了分区号 1，然后给它分配了 2 GB 的存储设备空间。你可以再次使用 p 命令查看结果
-
-```bash
-Command (m for help): p
-Disk /dev/sdb: 5368 MB, 5368709120 bytes
-255 heads, 63 sectors/track, 652 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
-Sector size (logical/physical): 512 bytes / 512 bytes
-I/O size (minimum/optimal): 512 bytes / 512 bytes
-Disk identifier: 0x029aa6af
-
-Device Boot      Start         End      Blocks   Id  System
-/dev/sdb1               1         262     2104483+  83  Linux
-Command (m for help):
-```
-
-从输出中现在可以看到，该存储设备上有了一个分区（叫作/dev/sdb1）。Id 列定义了 Linux 怎么对待该分区。fdisk 允许创建多种分区类型。使用 l 命令列出可用的不同类型。默认类型是 83，该类型定义了一个 Linux 文件系统。如果你想为其他文件系统创建一个分区（比如 Windows 的 NTFS 分区），只要选择一个不同的分区类型即可。
-
-可以重复上面的过程，将存储设备上剩下的空间分配给另一个 Linux 分区。创建了想要的分区之后，用 w 命令将更改保存到存储设备上。
-
-```bash
-Command (m for help): w
-The partition table has been altered!
-Calling ioctl() to re-read partition table.
-Syncing disks.
-```
-
-存储设备的分区信息被写入分区表中，Linux 系统通过 ioctl()调用来获知新分区的出现。设置好分区之后，可以使用 Linux 文件系统对其进行格式化。
-
-> 有些发行版和较旧的发行版在生成新分区之后并不会自动提醒 Linux 系统。如果是这样的话，你要么使用 partprob 或 hdparm 命令（参考相应的手册页），要么重启系统，让系统读取更新过的分区表。
+cfdisk 可以看到目前磁盘的详情，在界面下方有各类操作，可用方向键和回车进行选择，非常方便。一般的步骤是新建分区，选择类型，最后写入退出即可。
 
 ### 创建文件系统
 
@@ -306,11 +230,11 @@ fsck 命令使用/etc/fstab 文件来自动检查文件系统类型。如果存�
 
 ### 逻辑卷管理布局
 
-逻辑卷管理的核心在于如何处理安装在系统上的硬盘分区。在逻辑卷管理的世界里，硬盘称作`物理卷`（physical volume，PV）。每个物理卷都会映射到硬盘上特定的物理分区。
+逻辑卷管理的核心在于如何处理安装在系统上的硬盘分区。在逻辑卷管理的世界里，物理硬盘的各个分区称作`物理卷`（physical volume，PV）。每个物理卷都会映射到硬盘上特定的物理分区。
 
 多个物理卷集中在一起可以形成一个`卷组`（volume group，VG）。逻辑卷管理系统将卷组视为一个物理硬盘，但事实上卷组可能是由分布在多个物理硬盘上的多个物理分区组成的。卷组提供了一个创建逻辑分区的平台，而这些逻辑分区则包含了文件系统。
 
-整个结构中的最后一层是`逻辑卷`（logical volume，LV）。逻辑卷为 Linux 提供了创建文件系统的分区环境，作用类似于到目前为止我们一直在探讨的 Linux 中的物理硬盘分区。Linux 系统将逻辑卷视为物理分区。
+整个结构中的最后一层是`逻辑卷`（logical volume，LV）。逻辑卷基于卷组之上，为 Linux 提供了创建文件系统的分区环境，作用类似于到目前为止我们一直在探讨的 Linux 中的物理硬盘分区。Linux 系统将逻辑卷视为物理分区。
 
 可以使用任意一种标准 Linux 文件系统来格式化逻辑卷，然后再将它加入 Linux 虚拟目录中的某个挂载点
 
@@ -326,10 +250,10 @@ Linux LVM 是由 Heinz Mauelshagen 开发的，于 1998 年发布到了 Linux �
 
 Linux LVM 有两个可用的版本。
 
-- LVM1: 最初的 LV M 包于 1998 年发布，只能用于 Linux 内核 2.4 版本。它仅提供了基本的逻辑卷管理功能。
+- LVM1: 最初的 LVM 包于 1998 年发布，只能用于 Linux 内核 2.4 版本。它仅提供了基本的逻辑卷管理功能。
 - LVM2: LVM 的更新版本，可用于 Linux 内核 2.6 版本。它在标准的 LVM 1 功能外提供了额外的功能。
 
-大部分采用 2.6 或更高内核版本的现代 Linux 发行版都提供对 LV M 2 的支持。除了标准的逻辑卷管理功能外，LV M 2 还提供了另外一些好用的功能。
+大部分采用 2.6 或更高内核版本的现代 Linux 发行版都提供对 LVM 2 的支持。除了标准的逻辑卷管理功能外，LVM 2 还提供了另外一些好用的功能。
 
 1. 快照
 
@@ -356,7 +280,7 @@ LVM 快照功能提供了一些安慰，你可以随时创建逻辑卷的备份�
 
 ### 使用 Linux LVM
 
-现在你已经知道 Linux LVM 可以做什么了，本节将讨论如何创建 LV M 来帮助组织系统上的硬盘空间。Linux LVM 包只提供了命令行程序来创建和管理逻辑卷管理系统中所有组件。有些 Linux 发行版则包含了命令行命令对应的图形化前端，但为了完全控制你的 LV M 环境，最好习惯直接使用这些命令。
+现在你已经知道 Linux LVM 可以做什么了，本节将讨论如何创建 LVM 来帮助组织系统上的硬盘空间。Linux LVM 包只提供了命令行程序来创建和管理逻辑卷管理系统中所有组件。有些 Linux 发行版则包含了命令行命令对应的图形化前端，但为了完全控制你的 LV M 环境，最好习惯直接使用这些命令。
 
 #### 定义物理卷
 
@@ -419,8 +343,8 @@ PV UUID               0FIuq2-LBod-IOWt-8VeN-tglm-Q2ik-rGU2w7
 
 pvdisplay 命令显示出/dev/sdb1 现在已经被标记为物理卷。注意，输出中的 VG Name 内容为空，因为物理卷还不属于某个卷组。
 
-> PE(physical extent)：物理区域是物理卷中可用于分配的最小存储单元，物理区域大小在建立卷组时指定，一旦确定不能更改，同一卷组所有物理卷的物理区域大小需一致，新的 pv 加入到 vg 后，pe 的大小自动更改为 vg 中定义的 pe 大小。
-> LE(logical extent)：逻辑区域是逻辑卷中可用于分配的最小存储单元，逻辑区域的大小取决于逻辑卷所在卷组中的物理区域的大小
+> PE(physical extent)：物理区域是物理卷中可用于分配的最小存储单元，物理区域大小在建立卷组时指定，一旦确定不能更改，同一卷组所有物理卷的物理区域大小需一致，新的 pv 加入到 vg 后，pe 的大小自动更改为 vg 中定义的 pe 大小。  
+> LE(logical extent)：逻辑区域是逻辑卷中可用于分配的最小存储单元，逻辑区域的大小取决于逻辑卷所在卷组中的物理区域的大小。  
 > 卷组描述区域：卷组描述区域存在于每个物理卷中，用于描述物理卷本身、物理卷所属卷组、卷组中逻辑卷、逻辑卷中物理区域的分配等所有信息，它是在使用 pvcreate 建立物理卷时建立的。
 
 #### 创建卷组
