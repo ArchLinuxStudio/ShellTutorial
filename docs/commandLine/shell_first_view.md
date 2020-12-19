@@ -8,7 +8,7 @@
 
 ## 起步
 
-在启动图形化终端后，你首先会看到一个待输入的命令提示符，类似 windows 系统中的 cmd。一般如下所示,显示了当前用户 ID 名 wallen，系统名为 archlinux。`~`这个波浪线代表你正处于 wallen 这个用户的个人目录下，路径为`/home/wallen`。`$`代表当前是已一个普通用户登陆，若为`#`则表示是以 root 帐户登陆。
+在启动图形化终端后，你首先会看到一个待输入的命令提示符，类似 windows 系统中的 cmd。一般如下所示，显示了当前用户 ID 名 wallen，系统名为 archlinux。`~`这个波浪线代表你正处于 wallen 这个用户的个人目录下，路径为`/home/wallen`。`$`代表当前是已一个普通用户登陆，若为`#`则表示是以 root 帐户登陆。
 
 ```bash
 wallen@archlinux:~$
@@ -77,14 +77,14 @@ Error fetching from tldr: <urlopen error [Errno 111] Connection refused>
 /home/wallen/Documents/test.cpp
 ```
 
-这种完整的路径被称为`绝对路径`，即从根路径`/`到目标文件的完整路径结构,含义为 wallen 这个用户家路径下的 Documents 目录下，有一个名为 test.cpp 的文件。想查看当前所处的位置的绝对路径，可以使用命令`pwd`
+这种完整的路径被称为`绝对路径`，即从根路径`/`到目标文件的完整路径结构，含义为 wallen 这个用户家路径下的 Documents 目录下，有一个名为 test.cpp 的文件。想查看当前所处的位置的绝对路径，可以使用命令`pwd`
 
 ```bash
 $ pwd
 /home/wallen/Documents/
 ```
 
-与此对应的，另一个概念为`相对路径`。其代表当前路径为基准起点，对应的一个相对位置。比如当前你所处的路径为`/home/wallen/Documents`,此时想要去到 wallen 用户的桌面 `/home/wallen/Desktop` 路径下，用相对路径即可表示为
+与此对应的，另一个概念为`相对路径`。其代表当前路径为基准起点，对应的一个相对位置。比如当前你所处的路径为`/home/wallen/Documents`，此时想要去到 wallen 用户的桌面 `/home/wallen/Desktop` 路径下，用相对路径即可表示为
 
 ```bash
 ../Desktop
@@ -415,12 +415,12 @@ $ file 1.txt
 
 - directory 目录
 - symbolic link to 'data_file' 符号链接
-- Bourne-Again shell script, ASCII text executable 脚本文件
-- /usr/bin/ls: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.24  
+- Bourne-Again shell script，ASCII text executable 脚本文件
+- /usr/bin/ls: ELF 64-bit LSB executable，x86-64，version 1 (SYSV)，dynamically linked (uses shared libs)，for GNU/Linux 2.6.24  
   二进制可执行程序。file 命令能够确定该程序编译时所面向的平台以及需要何种类型的库。如果你有从未知源处获得的二进制文件，这会是个非常有用的特性
 - JSON data
 
-知道如何查看文件类型后，接下来学习如何查看文件内容。几个常见的命令是 cat, more 与 less。more 命令目前已经和 less 一样支持上下翻页，基本没有区别了。对于查看单个完整文件，群主更偏向直接使用 vim 查看。
+知道如何查看文件类型后，接下来学习如何查看文件内容。几个常见的命令是 cat，more 与 less。more 命令目前已经和 less 一样支持上下翻页，基本没有区别了。对于查看单个完整文件，群主更偏向直接使用 vim 查看。
 
 有时存在一些巨型文件，如有些日志文件可以达到几十 GB 之大，这时候如果还整体查看文件，可能直接把 vim 等程序卡死了。此时需要的就是查看部分文件。常用的命令为 tail 和 head。
 
@@ -449,6 +449,6 @@ $ head -5 log_file
 
 ## 文件的编辑
 
-在命令行中编辑文件最常用的三个程序分别为 emacs,vim,以及 nano。其中 emacs 以及 vim 的功能较为丰富，nano 较为简单。个人的意见是掌握 vim 一种即可。原因是 vim 应用广泛，且是很多 Linux 发行版的预装程序。对于 vim 的学习，也只是适度即可，有很多 linux 爱好者把 vim 玩的炉火纯青，花费很多时间精力将 vim 打造成 IDE 级别的程序，个人认为是没有必要的。
+在命令行中编辑文件最常用的三个程序分别为 emacs，vim，以及 nano。其中 emacs 以及 vim 的功能较为丰富，nano 较为简单。个人的意见是掌握 vim 一种即可。原因是 vim 应用广泛，且是很多 Linux 发行版的预装程序。对于 vim 的学习，也只是适度即可，有很多 linux 爱好者把 vim 玩的炉火纯青，花费很多时间精力将 vim 打造成 IDE 级别的程序，个人认为是没有必要的。
 
 对于 vim 的学习，有一个命令是`vimtutor`。这是一个非常好的边操作边学的教程，大家学习几遍，即可很好的掌握 vim 的大多数基础功能了。如果想看中文的版本，可以执行`vimtutor -g zh`。
