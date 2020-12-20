@@ -11,6 +11,9 @@
 
 - 基础 Shell 编程
 
+  - [初识脚本编程](/shellBasic/shell_basic)
+  - [脚本结构化命令](/shellBasic/structured_command)
+
 - 高级 Shell 编程
 
 - Shell 脚本实战
