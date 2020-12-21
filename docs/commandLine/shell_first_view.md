@@ -61,7 +61,7 @@ $ man ls
 $ tldr tar   #查看tar命令的简明使用方式
 ```
 
-若你出现如下错误，说明你的网络环境下，tldr 命令查询的 github raw 网址已经被 GFW 墙掉了。请使用[全局代理](https://archlinuxstudio.github.io/ArchLinuxTutorial/#/advanced/transparentProxy)或 [proxychains 前缀](https://archlinuxstudio.github.io/ArchLinuxTutorial/#/advanced/fxckGFW)。
+若你出现如下错误，说明你的网络环境下，tldr 命令查询的 github raw 网址已经被 GFW 墙掉了。请使用[全局代理](https://archlinuxstudio.github.io/ArchLinuxTutorial/#/advanced/transparentProxy)或 [proxychains 前缀](https://archlinuxstudio.github.io/ArchLinuxTutorial/#/advanced/fxckGFW)，或添加 https_proxy 环境变量。
 
 ```bash
 Error fetching from tldr: <urlopen error [Errno 111] Connection refused>
