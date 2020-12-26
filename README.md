@@ -9,7 +9,7 @@
 
 [![HitCount](http://hits.dwyl.io/ArchLinuxStudio/ShellTutorial.svg)](http://hits.dwyl.io/ArchLinuxStudio/ShellTutorial)
 
-## [阅读地址](https://ArchLinuxStudio.github.io/ShellTutorial/#/)
+## [阅读地址](https://ArchLinuxStudio.github.io/ShellTutorial/#/) 命令行部分已完成。脚本初级高级部分慢速更新中！
 
 可能是最实用，最简洁的 Linux 命令行与 Shell 中文教程。你可以通过本教程学会:
 
