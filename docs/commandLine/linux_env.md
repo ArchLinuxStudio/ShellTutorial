@@ -137,7 +137,7 @@ $ echo $PATH
 $ PATH=$PATH:/home/christine/Scripts
 ```
 
-程序员通常的办法是将单点符也加入 PATH 环境变量。该单点符代表当前目录
+一些程序员习惯将单点符也加入 PATH 环境变量。该单点符代表当前目录
 
 ```bash
 $ PATH=$PATH:.

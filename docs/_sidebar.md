@@ -13,6 +13,7 @@
 
   - [初识脚本编程](/shellBasic/shell_basic)
   - [脚本结构化命令](/shellBasic/structured_command)
+  - [更多的结构化命令](/shellBasic/more_structured_command)
 
 - 高级 Shell 编程
 
