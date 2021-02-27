@@ -1,0 +1,13 @@
+{
+  "name": "linux_shell_tutorial",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "docsify-cli": "^4.4.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "docsify serve docs"
+  },
+  "license": "MIT"
+}
