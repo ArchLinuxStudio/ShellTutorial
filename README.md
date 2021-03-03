@@ -7,7 +7,7 @@
 提供在线网页文档，承诺健在即更新
 </p>
 
-[![HitCount](http://hits.dwyl.io/ArchLinuxStudio/ShellTutorial.svg)](http://hits.dwyl.io/ArchLinuxStudio/ShellTutorial)
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FArchLinuxStudio%2FShellTutorial&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 
 ## [阅读地址](https://ArchLinuxStudio.github.io/ShellTutorial/#/) 命令行部分已完成。脚本初级进阶部分慢速更新中！
 
@@ -15,3 +15,5 @@
 
 - Linux 命令行的使用方式
 - Linux Bash Shell 编程
+
+[![Stargazers over time](https://starchart.cc/ArchLinuxStudio/ShellTutorial.svg)](https://starchart.cc/ArchLinuxStudio/ShellTutorial)

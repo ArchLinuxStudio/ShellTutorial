@@ -140,7 +140,7 @@ Linux 经常采用隐藏文件来保存配置信息。在 Linux 上，隐藏文�
 $ ls -l
 总用量 44
 drwxr-xr-x  3 wallen wallen 4096 Dec 13 21:09 Android
-drwx--x---+ 2 wallen wallen 4096 Dec 17 13:02 Desktop #多出的加号代表ACL 后续会讲 暂不理会
+drwx--x---+ 2 wallen wallen 4096 Dec 17 13:02 Desktop #多出的加号代表ACL
 drwxr-xr-x  5 wallen wallen 4096 Dec 10 15:08 Documents
 drwxr-xr-x  4 wallen wallen 4096 Dec 17 11:06 Downloads
 drwxr-xr-x  3 wallen wallen 4096 Dec 10 22:50 Games
