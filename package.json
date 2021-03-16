@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "docsify-cli": "^4.4.2"
+    "docsify-cli": "^4.4.3"
   },
   "devDependencies": {},
   "scripts": {
