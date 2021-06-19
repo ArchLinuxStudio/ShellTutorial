@@ -4,7 +4,7 @@
 <h1>Linux命令行与Shell脚本教程 </h1> 
 包含常见命令行使用，Bash基础、进阶编程，以及实用范例！ 
 </br>
-提供在线网页文档，承诺健在即更新
+提供在线网页文档，承诺健在即更新。目前项目组的最高优先级是Linux网络编程与加密。本项目暂时搁置。
 </p>
 
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FArchLinuxStudio%2FShellTutorial&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
