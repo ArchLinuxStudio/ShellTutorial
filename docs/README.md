@@ -1,4 +1,4 @@
-# Linux 命令行与 Shell 脚本教程(WIP)<!-- {docsify-ignore-all} -->
+# Linux 命令行与 Shell 脚本教程(WIP) - ShellTutorial - Arch Linux Studio<!-- {docsify-ignore-all} -->
 
 本书以《Linux 命令行与 Shell 脚本编程大全(第 3 版)》，《鸟哥的 Linux 私房菜第四版》， Arch Wiki 以及维基百科为基准参考，精炼更新出一本实用教程，剔除过时内容与废话，并融入与时俱进的新内容。
 

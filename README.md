@@ -4,7 +4,7 @@
 <h1>Linux命令行与Shell脚本教程 </h1> 
 包含常见命令行使用，Bash基础、进阶编程，以及实用范例！ 
 </br>
-提供在线网页文档，承诺健在即更新。目前项目组的最高优先级是Linux网络编程与加密,本项目将以极慢的速度更新。
+提供在线网页文档，承诺健在即更新。*目前项目组的最高优先级是Linux网络编程与加密,本项目将以极慢的速度更新。*
 </p>
 
 [![Badge](https://img.shields.io/badge/link-ShellTutorial-%23F5AE29.svg)](https://archlinuxstudio.github.io/ShellTutorial)
