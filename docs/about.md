@@ -1,11 +1,11 @@
 # 关于&致谢 <!-- {docsify-ignore-all} -->
 
-关于本书存在的任何问题以及建议，均可以给群主发送邮件，也可以直接在本页下方留言。
+关于本书存在的任何问题以及建议，均可以给我们发送邮件，也可以直接在本页下方留言。
 
-Telegram 电报群: [ArchLinuxStudio](https://t.me/FSF_Ministry_of_Truth)
+电子邮件: archlinuxstudio@tutamail.com  
+Telegram 电报群: [ArchLinuxStudio🇨🇦🏳️‍⚧️🏳️‍🌈](https://t.me/FSF_Ministry_of_Truth)
+Matrix 群组: [Matrix Group:ArchLinuxStudio🇨🇦🏳️‍⚧️🏳️‍🌈](https://matrix.to/#/#ArchLinuxStudio:matrix.org)
 
 ## 致谢
 
-最近几年，群主经历了很多事情，基本都不是什么好事。所以有了那么一丁点微小的感悟。
-
-最后要感谢的就是各大开源社区所提供的资源，没有大家的一砖一瓦，就不会有 Linux 生态越来越好的今天，感谢大家。
+向所有自由软件开发者、布道者与先行者致敬。
