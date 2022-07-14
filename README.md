@@ -29,6 +29,7 @@
 
 - Linux 命令行的使用方式
 - Linux Bash Shell 编程
+- Linux 二次元交流群: [Telegram Group:ArchLinuxStudio🇨🇦🏳️‍⚧️🏳️‍🌈](https://t.me/FSF_Ministry_of_Truth) ||| [Matrix Group:ArchLinuxStudio🇨🇦🏳️‍⚧️🏳️‍🌈](https://matrix.to/#/#ArchLinuxStudio:matrix.org)。
 
 命令行部分已完成。脚本初级以及进阶部分慢速完善中。
 

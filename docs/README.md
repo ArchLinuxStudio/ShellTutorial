@@ -6,7 +6,7 @@
 
   - 无废话，不会像很多撑时长的教程一样浪费你的时间。
   - 只介绍高频常用的用法，阅读性价比高。对于更详细的，不常用的用法，请自行查阅 man 手册、tldr 命令或者通过互联网查询。
-  - 只要群主健在 就会一直更新 [鼓励志愿者提交更新](CONTRIBUTING.md)
+  - 由社区维护，尽可能的维持一定频率的更新。[鼓励志愿者提交更新](CONTRIBUTING.md)
   - Linux 二次元交流群: [Telegram Group:ArchLinuxStudio🇨🇦🏳️‍⚧️🏳️‍🌈](https://t.me/FSF_Ministry_of_Truth) ||| [Matrix Group:ArchLinuxStudio🇨🇦🏳️‍⚧️🏳️‍🌈](https://matrix.to/#/#ArchLinuxStudio:matrix.org)。
 
 学习本书的前置条件是你已经拥有一个安装好的 Linux 系统，实体机或者虚拟机的安装均可。建议使用 Ubuntu 或者 Arch Linux。即使命令行在各个 Linux 发行版上基本通用，但是本书还是会针对 Arch Linux 添加更多内容，建议有能力的同学尽量使用 Arch Linux。对于 Arch Linux，可阅读学习同系列教程：[Arch Linux 安装使用教程](https://ArchLinuxStudio.github.io/ArchLinuxTutorial/#/)。同时没有接触过 Linux 的同学，强烈建议先学习一些 Linux 基础概念再进行本书的学习。
