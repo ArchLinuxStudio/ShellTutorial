@@ -306,7 +306,8 @@ $
 ```bash
 $ sed '3,${
 > s/brown/green/
-> s/lazy/active/ > }' data1.txt
+> s/lazy/active/
+> }' data1.txt
 The quick brown fox jumps over the lazy dog.
 The quick brown fox jumps over the lazy dog.
 The quick green fox jumps over the active dog.
