@@ -16,7 +16,7 @@
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
 [![Lines](https://img.shields.io/tokei/lines/github/ArchLinuxStudio/ShellTutorial)](https://img.shields.io/tokei/lines/github/ArchLinuxStudio/ShellTutorial)
 [![lastcommit](https://img.shields.io/github/last-commit/ArchLinuxStudio/ShellTutorial)](https://img.shields.io/github/last-commit/ArchLinuxStudio/ShellTutorial)
-[![Donate with Monero](https://en.cryptobadges.io/badge/micro/43KJJZztPtBC7k8ZjJpuw7bThW1mUH6N947TeNxvsSHD7DywRN365WZ7qpSxVopSd7cg4PFjMuUewjfvATUtTKGQLMboU36)](https://en.cryptobadges.io/donate/43KJJZztPtBC7k8ZjJpuw7bThW1mUH6N947TeNxvsSHD7DywRN365WZ7qpSxVopSd7cg4PFjMuUewjfvATUtTKGQLMboU36)
+[![Donate with Monero](https://img.shields.io/static/v1?label=DonatewithXMR&message=43KJJZztPtBC7k8ZjJpuw7bThW1mUH6N947TeNxvsSHD7DywRN365WZ7qpSxVopSd7cg4PFjMuUewjfvATUtTKGQLMboU36&color=ea6521)]()
 
 <!-- shields not support telegram online count now, use sample discord instead temporarily -->
 
